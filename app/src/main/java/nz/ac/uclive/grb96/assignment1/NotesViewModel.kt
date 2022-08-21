@@ -37,6 +37,15 @@ class NotesViewModel: ViewModel() {
         _notes.notifyObserver()
     }
 
+    fun getNoteFromName(name: String): Note? {
+        for (note: Note in _notes.value!!) {
+            if (note.name == name) {
+                return note
+            }
+        }
+        return null
+    }
+
     fun <T> MutableLiveData<T>.notifyObserver() {
         this.value = this.value
     }

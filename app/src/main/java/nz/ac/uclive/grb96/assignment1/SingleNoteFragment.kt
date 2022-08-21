@@ -25,7 +25,7 @@ class SingleNoteFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_single_note, container, false)
         val name = arguments?.getString("name")!!
-        val note = getNoteFromName(name)!!
+        val note = viewModel.getNoteFromName(name)!!
 
         val noteName = view.findViewById<TextView>(R.id.note_name)
         noteName.text = note.name
@@ -56,15 +56,6 @@ class SingleNoteFragment : Fragment() {
         }
 
         builder.show()
-    }
-
-    private fun getNoteFromName(name: String): Note? {
-        for (note: Note in viewModel.notes.value!!) {
-            if (note.name == name) {
-                return note
-            }
-        }
-        return null
     }
 
     private fun updateNoteSections(note: Note) {

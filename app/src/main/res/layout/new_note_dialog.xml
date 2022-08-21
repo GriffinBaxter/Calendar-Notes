@@ -8,12 +8,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/header"
+        android:text="@string/name"
         android:textSize="24sp"
-        android:labelFor="@+id/headerBox" />
+        android:labelFor="@+id/nameBox" />
 
     <EditText
-        android:id="@+id/headerBox"
+        android:id="@+id/nameBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -24,16 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="@string/content"
+        android:text="Note Type"
         android:textSize="24sp"
         android:labelFor="@+id/contentBox" />
 
-    <EditText
-        android:id="@+id/contentBox"
+    <Spinner
+        android:id="@+id/noteTypeSpinner"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:ems="10"
-        android:gravity="top|start"
-        android:importantForAutofill="no"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -7,4 +7,6 @@
     <string name="sections">Sections</string>
     <string name="header">Header</string>
     <string name="content">Content</string>
+    <string name="new_note">New Note</string>
+    <string name="name">Name</string>
 </resources>
