@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import nz.ac.uclive.grb96.assignment1.Persistence.writeData
 
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 
@@ -20,6 +21,8 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Persistence.readData(requireContext(), viewModel)
+
         val view = inflater.inflate(R.layout.fragment_notes_list, container, false)
 
         val noteAdapter = NotesAdapter(viewModel.notes.value!!,this)
@@ -69,6 +72,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
                 Toast.makeText(requireContext(), "Unable to add note, a note with the name \"${nameBox.text}\" already exists. Please try again.", Toast.LENGTH_LONG).show()
             } else {
                 viewModel.addNote(Note(nameBox.text.toString(), noteType, arrayListOf()))
+                writeData(requireActivity(), viewModel.notes.value!!)
             }
         }
 

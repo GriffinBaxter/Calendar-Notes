@@ -23,6 +23,8 @@ class SingleNoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Persistence.readData(requireContext(), viewModel)
+
         val view = inflater.inflate(R.layout.fragment_single_note, container, false)
         val name = arguments?.getString("name")!!
         val note = viewModel.getNoteFromName(name)!!
@@ -52,6 +54,7 @@ class SingleNoteFragment : Fragment() {
 
         builder.setPositiveButton("Add") { _, _ ->
             viewModel.addNoteSection(note, NoteSection(headerBox.text.toString(), contentBox.text.toString()))
+            Persistence.writeData(requireActivity(), viewModel.notes.value!!)
             updateNoteSections(note)
         }
 
