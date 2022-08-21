@@ -23,6 +23,13 @@
         android:text="@string/new_section"
         android:layout_marginHorizontal="10dp"/>
 
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share Note"
+        android:layout_marginHorizontal="10dp"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

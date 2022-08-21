@@ -1,5 +1,7 @@
 package nz.ac.uclive.grb96.assignment1
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.fragment.app.Fragment
@@ -37,10 +39,39 @@ class SingleNoteFragment : Fragment() {
             newSection(note)
         }
 
+        val shareButton: Button = view.findViewById(R.id.shareButton)
+        shareButton.setOnClickListener {
+            val options = arrayOf("Email", "Text")
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("How would you like to share your note?")
+            builder.setItems(options) { _, optionId ->
+                dispatchAction(optionId, note)
+            }
+            builder.show()
+        }
+
         noteSections = view.findViewById(R.id.note_sections)
         updateNoteSections(note)
 
         return view
+    }
+
+    private fun dispatchAction(optionId: Int, note: Note) {
+        when (optionId) {
+            0 -> {
+                val uri = Uri.parse("mailto:")
+                val intent = Intent(Intent.ACTION_SENDTO, uri)
+                intent.putExtra(Intent.EXTRA_SUBJECT, note.name)
+                intent.putExtra(Intent.EXTRA_TEXT, getNoteText(note).toString())
+                startActivity(intent)
+            }
+            1 -> {
+                val uri = Uri.parse("smsto:")
+                val intent = Intent(Intent.ACTION_SENDTO, uri)
+                intent.putExtra("sms_body", getNoteText(note).toString())
+                startActivity(intent)
+            }
+        }
     }
 
     private fun newSection(note: Note) {
@@ -62,6 +93,11 @@ class SingleNoteFragment : Fragment() {
     }
 
     private fun updateNoteSections(note: Note) {
+        val noteText = getNoteText(note)
+        noteSections.text = noteText
+    }
+
+    private fun getNoteText(note: Note): SpannableStringBuilder {
         val noteText = SpannableStringBuilder()
         for (section: NoteSection in note.sections) {
             noteText
@@ -70,8 +106,6 @@ class SingleNoteFragment : Fragment() {
                 .append(section.content)
                 .append("\n\n")
         }
-
-        noteSections.text = noteText
+        return noteText
     }
-
 }
