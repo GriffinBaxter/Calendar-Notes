@@ -10,4 +10,8 @@
     <string name="new_note">New Note</string>
     <string name="name">Name</string>
     <string name="due_date">Due Date</string>
+    <string name="pick_start_time">Pick Start Time</string>
+    <string name="pick_end_time">Pick End Time</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
 </resources>

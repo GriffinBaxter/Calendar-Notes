@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/due_date"
         android:textSize="24sp"
-        android:labelFor="@+id/headerBox" />
+        android:labelFor="@+id/dueDatePicker" />
 
     <DatePicker
         android:id="@+id/dueDatePicker"

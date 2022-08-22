@@ -1,5 +1,6 @@
 package nz.ac.uclive.grb96.assignment1
 
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class SingleNoteFragment : Fragment() {
 
@@ -83,7 +85,7 @@ class SingleNoteFragment : Fragment() {
                 newDueDatesSection(builder, note)
             }
             NoteType.EVENTS -> {
-
+                newEventsSection(builder, note)
             }
         }
     }
@@ -123,10 +125,77 @@ class SingleNoteFragment : Fragment() {
         builder.setPositiveButton("Add") { _, _ ->
             viewModel.addNoteSection(
                 note,
-                NoteSection(contentBox.text.toString(), dueDate = DayMonthYear(dueDatePicker.dayOfMonth, dueDatePicker.month, dueDatePicker.year))
+                NoteSection(contentBox.text.toString(), dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth))
             )
             writeData(requireActivity(), viewModel.notes.value!!)
             updateNoteSections(note)
+        }
+
+        builder.show()
+    }
+
+    private fun newEventsSection(
+        builder: AlertDialog.Builder,
+        note: Note
+    ) {
+        val form = layoutInflater.inflate(R.layout.new_events_section_dialog, null, false)
+        builder.setView(form)
+
+        val datePicker: DatePicker = form.findViewById(R.id.datePicker)
+        val contentBox: EditText = form.findViewById(R.id.contentBox)
+        val timeText: TextView = form.findViewById(R.id.timeText)
+
+        val dateStartEndHourMinute = DateStartEndHourMinute(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), 12, 0, 13, 0)
+
+        timeText.text = getTimeText(dateStartEndHourMinute)
+
+        val startTimeButton: Button = form.findViewById(R.id.startTimeButton)
+        startTimeButton.setOnClickListener {
+            val timePicker = TimePickerDialog(
+                requireContext(),
+                { _, hour, minute ->
+                    dateStartEndHourMinute.startHour = hour
+                    dateStartEndHourMinute.startMinute = minute
+                    timeText.text = getTimeText(dateStartEndHourMinute)
+                },
+                dateStartEndHourMinute.startHour,
+                dateStartEndHourMinute.startMinute,
+                false,
+            )
+            timePicker.show()
+        }
+        val endTimeButton: Button = form.findViewById(R.id.endTimeButton)
+        endTimeButton.setOnClickListener {
+            val timePicker = TimePickerDialog(
+                requireContext(),
+                { _, hour, minute ->
+                    dateStartEndHourMinute.endHour = hour
+                    dateStartEndHourMinute.endMinute = minute
+                    timeText.text = getTimeText(dateStartEndHourMinute)
+                },
+                dateStartEndHourMinute.endHour,
+                dateStartEndHourMinute.endMinute,
+                false,
+            )
+            timePicker.show()
+        }
+
+        builder.setPositiveButton("Add") { _, _ ->
+            dateStartEndHourMinute.date.year = datePicker.year
+            dateStartEndHourMinute.date.month = datePicker.month
+            dateStartEndHourMinute.date.day = datePicker.dayOfMonth
+
+            val noteSection = NoteSection(contentBox.text.toString(), eventTime = dateStartEndHourMinute)
+            if (noteSection.eventTime!!.getEventsLocalTimeStart() < noteSection.eventTime.getEventsLocalTimeEnd()) {
+                viewModel.addNoteSection(
+                    note,
+                    noteSection
+                )
+                writeData(requireActivity(), viewModel.notes.value!!)
+                updateNoteSections(note)
+            } else {
+                Toast.makeText(requireContext(), "Unable to add section, start time must be before end time. Please try again.", Toast.LENGTH_LONG).show()
+            }
         }
 
         builder.show()
@@ -152,12 +221,12 @@ class SingleNoteFragment : Fragment() {
             NoteType.DUE_DATES -> {
                 val dates = arrayListOf<LocalDate>()
                 for (section: NoteSection in note.sections) {
-                    dates.add(section.getLocalDate())
+                    dates.add(section.getDueDatesLocalDate())
                 }
                 val sortedDates = dates.sorted()
                 for (date: LocalDate in sortedDates) {
                     for (section: NoteSection in note.sections) {
-                        if (date == section.getLocalDate()) {
+                        if (date == section.getDueDatesLocalDate()) {
                             noteText
                                 .bold { append(date.dayOfMonth.toString()) }
                                 .append(" ")
@@ -173,9 +242,36 @@ class SingleNoteFragment : Fragment() {
                 }
             }
             NoteType.EVENTS -> {
-
+                val dateTimes = arrayListOf<LocalDateTime>()
+                for (section: NoteSection in note.sections) {
+                    dateTimes.add(section.eventTime!!.getEventsLocalDateTimeStart())
+                }
+                val sortedDateTimes = dateTimes.sorted()
+                for (dateTime: LocalDateTime in sortedDateTimes) {
+                    for (section: NoteSection in note.sections) {
+                        if (dateTime == section.eventTime!!.getEventsLocalDateTimeStart()) {
+                            noteText
+                                .bold { append(dateTime.dayOfMonth.toString()) }
+                                .append(" ")
+                                .bold { append(dateTime.month.name) }
+                                .append(" ")
+                                .bold { append(dateTime.year.toString()) }
+                                .bold { append(" (") }
+                                .bold { append(getTimeText(section.eventTime)) }
+                                .bold { append(")") }
+                                .append("\n")
+                                .append(section.content)
+                                .append("\n\n")
+                            break
+                        }
+                    }
+                }
             }
         }
         return noteText
+    }
+
+    private fun getTimeText(dateStartEndHourMinute: DateStartEndHourMinute): String {
+        return dateStartEndHourMinute.getEventsLocalTimeStart().toString() + " - " + dateStartEndHourMinute.getEventsLocalTimeEnd().toString()
     }
 }
