@@ -11,7 +11,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import nz.ac.uclive.grb96.assignment1.Persistence.writeData
 
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 
@@ -21,7 +20,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Persistence.readData(requireContext(), viewModel)
+        readData(requireContext(), viewModel)
 
         val view = inflater.inflate(R.layout.fragment_notes_list, container, false)
 
@@ -59,13 +58,12 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         noteTypeSpinner.adapter = adapter
 
         builder.setPositiveButton("Add") { _, _ ->
-            lateinit var noteType: NoteType;
-            if (noteTypeSpinner.selectedItem.toString() == "Standard") {
-                noteType = NoteType.STANDARD;
+            val noteType: NoteType = if (noteTypeSpinner.selectedItem.toString() == "Standard") {
+                NoteType.STANDARD
             } else if (noteTypeSpinner.selectedItem.toString() == "Due Dates") {
-                noteType = NoteType.DUE_DATES;
+                NoteType.DUE_DATES
             } else {
-                noteType = NoteType.EVENTS;
+                NoteType.EVENTS
             }
 
             if (viewModel.getNoteFromName(nameBox.text.toString()) != null) {

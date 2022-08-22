@@ -8,12 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
+import java.time.LocalDate
 
 class SingleNoteFragment : Fragment() {
 
@@ -25,7 +24,7 @@ class SingleNoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Persistence.readData(requireContext(), viewModel)
+        readData(requireContext(), viewModel)
 
         val view = inflater.inflate(R.layout.fragment_single_note, container, false)
         val name = arguments?.getString("name")!!
@@ -76,16 +75,57 @@ class SingleNoteFragment : Fragment() {
 
     private fun newSection(note: Note) {
         val builder = AlertDialog.Builder(requireContext())
+        when (note.type) {
+            NoteType.STANDARD -> {
+                newStandardSection(builder, note)
+            }
+            NoteType.DUE_DATES -> {
+                newDueDatesSection(builder, note)
+            }
+            NoteType.EVENTS -> {
 
-        val form = layoutInflater.inflate(R.layout.new_section_dialog, null, false)
+            }
+        }
+    }
+
+    private fun newStandardSection(
+        builder: AlertDialog.Builder,
+        note: Note
+    ) {
+        val form = layoutInflater.inflate(R.layout.new_standard_section_dialog, null, false)
         builder.setView(form)
 
         val headerBox: EditText = form.findViewById(R.id.headerBox)
         val contentBox: EditText = form.findViewById(R.id.contentBox)
 
         builder.setPositiveButton("Add") { _, _ ->
-            viewModel.addNoteSection(note, NoteSection(headerBox.text.toString(), contentBox.text.toString()))
-            Persistence.writeData(requireActivity(), viewModel.notes.value!!)
+            viewModel.addNoteSection(
+                note,
+                NoteSection(contentBox.text.toString(), header = headerBox.text.toString())
+            )
+            writeData(requireActivity(), viewModel.notes.value!!)
+            updateNoteSections(note)
+        }
+
+        builder.show()
+    }
+
+    private fun newDueDatesSection(
+        builder: AlertDialog.Builder,
+        note: Note
+    ) {
+        val form = layoutInflater.inflate(R.layout.new_due_dates_section_dialog, null, false)
+        builder.setView(form)
+
+        val dueDatePicker: DatePicker = form.findViewById(R.id.dueDatePicker)
+        val contentBox: EditText = form.findViewById(R.id.contentBox)
+
+        builder.setPositiveButton("Add") { _, _ ->
+            viewModel.addNoteSection(
+                note,
+                NoteSection(contentBox.text.toString(), dueDate = DayMonthYear(dueDatePicker.dayOfMonth, dueDatePicker.month, dueDatePicker.year))
+            )
+            writeData(requireActivity(), viewModel.notes.value!!)
             updateNoteSections(note)
         }
 
@@ -99,12 +139,42 @@ class SingleNoteFragment : Fragment() {
 
     private fun getNoteText(note: Note): SpannableStringBuilder {
         val noteText = SpannableStringBuilder()
-        for (section: NoteSection in note.sections) {
-            noteText
-                .bold { append(section.header) }
-                .append("\n")
-                .append(section.content)
-                .append("\n\n")
+        when (note.type) {
+            NoteType.STANDARD -> {
+                for (section: NoteSection in note.sections) {
+                    noteText
+                        .bold { append(section.header) }
+                        .append("\n")
+                        .append(section.content)
+                        .append("\n\n")
+                }
+            }
+            NoteType.DUE_DATES -> {
+                val dates = arrayListOf<LocalDate>()
+                for (section: NoteSection in note.sections) {
+                    dates.add(section.getLocalDate())
+                }
+                val sortedDates = dates.sorted()
+                for (date: LocalDate in sortedDates) {
+                    for (section: NoteSection in note.sections) {
+                        if (date == section.getLocalDate()) {
+                            noteText
+                                .bold { append(date.dayOfMonth.toString()) }
+                                .append(" ")
+                                .bold { append(date.month.name) }
+                                .append(" ")
+                                .bold { append(date.year.toString()) }
+                                .append("\n")
+                                .append(section.content)
+                                .append("\n\n")
+                            break
+                        }
+                    }
+                }
+            }
+            NoteType.EVENTS -> {
+
+            }
         }
         return noteText
     }
