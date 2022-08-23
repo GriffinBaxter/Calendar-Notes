@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.model.notes
+package nz.ac.uclive.grb96.assignment1.model.note
 
 import nz.ac.uclive.grb96.assignment1.NoteSection
 

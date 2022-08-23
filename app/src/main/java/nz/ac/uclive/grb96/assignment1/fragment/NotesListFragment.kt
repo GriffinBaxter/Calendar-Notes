@@ -12,8 +12,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import nz.ac.uclive.grb96.assignment1.*
-import nz.ac.uclive.grb96.assignment1.model.notes.Note
-import nz.ac.uclive.grb96.assignment1.model.notes.NoteType
+import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 import nz.ac.uclive.grb96.assignment1.util.readData
 import nz.ac.uclive.grb96.assignment1.util.writeData
 

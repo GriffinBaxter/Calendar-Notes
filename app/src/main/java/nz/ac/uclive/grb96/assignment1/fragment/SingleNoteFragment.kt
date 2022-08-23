@@ -14,11 +14,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
 import nz.ac.uclive.grb96.assignment1.*
-import nz.ac.uclive.grb96.assignment1.model.datestimes.DateStartEndTime
-import nz.ac.uclive.grb96.assignment1.model.datestimes.StartEndTime
-import nz.ac.uclive.grb96.assignment1.model.datestimes.YearMonthDay
-import nz.ac.uclive.grb96.assignment1.model.notes.Note
-import nz.ac.uclive.grb96.assignment1.model.notes.NoteType
+import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
+import nz.ac.uclive.grb96.assignment1.model.datetime.StartEndTime
+import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
+import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 import nz.ac.uclive.grb96.assignment1.util.readData
 import nz.ac.uclive.grb96.assignment1.util.writeData
 import java.time.LocalDate
