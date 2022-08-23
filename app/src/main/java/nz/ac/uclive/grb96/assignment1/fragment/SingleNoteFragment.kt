@@ -21,6 +21,7 @@ import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
 import nz.ac.uclive.grb96.assignment1.model.note.Note
 import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
+import nz.ac.uclive.grb96.assignment1.util.getTimeText
 import nz.ac.uclive.grb96.assignment1.util.readData
 import nz.ac.uclive.grb96.assignment1.util.writeData
 import java.time.LocalDate
@@ -331,9 +332,5 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
             }
         }
         return noteText
-    }
-
-    private fun getTimeText(startEndTime: StartEndTime): String {
-        return startEndTime.getEventsLocalStartTime().toString() + " - " + startEndTime.getEventsLocalEndTime().toString()
     }
 }

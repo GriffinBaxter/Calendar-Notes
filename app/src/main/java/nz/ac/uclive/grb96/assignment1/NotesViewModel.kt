@@ -8,6 +8,7 @@ import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
 import nz.ac.uclive.grb96.assignment1.model.note.Note
 import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
+import java.time.LocalDate
 
 class NotesViewModel: ViewModel() {
 
@@ -94,6 +95,33 @@ class NotesViewModel: ViewModel() {
             }
         }
         return null
+    }
+
+    fun getDueDateSectionFromDate(date: LocalDate): NoteSection? {
+        for (note: Note in _notes.value!!) {
+            if (note.type == NoteType.DUE_DATES) {
+                for (section: NoteSection in note.sections) {
+                    if (section.dueDate!! == YearMonthDay(date.year, date.month.value - 1, date.dayOfMonth)) {
+                        return section
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    fun getEventSectionsFromDate(date: LocalDate): List<NoteSection> {
+        val sections = arrayListOf<NoteSection>()
+        for (note: Note in _notes.value!!) {
+            if (note.type == NoteType.EVENTS) {
+                for (section: NoteSection in note.sections) {
+                    if (section.eventTime!!.date == YearMonthDay(date.year, date.month.value - 1, date.dayOfMonth)) {
+                        sections.add(section)
+                    }
+                }
+            }
+        }
+        return sections
     }
 
     fun setNotes(notes: MutableList<Note>) {

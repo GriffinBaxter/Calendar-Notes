@@ -8,6 +8,13 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/calendarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="@string/calendar" />
+
+    <Button
         android:id="@+id/newNoteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

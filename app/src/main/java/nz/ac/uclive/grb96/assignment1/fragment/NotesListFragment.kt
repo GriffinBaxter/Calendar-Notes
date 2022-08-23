@@ -37,6 +37,11 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
             noteAdapter.setData(newNotes)
         }
 
+        val calendarButton: Button = view.findViewById(R.id.calendarButton)
+        calendarButton.setOnClickListener {
+            calendar()
+        }
+
         val newNoteButton: Button = view.findViewById(R.id.newNoteButton)
         newNoteButton.setOnClickListener {
             newNote()
@@ -67,6 +72,10 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
             val args = bundleOf("name" to note.name)
             Navigation.findNavController(requireView()).navigate(R.id.action_notesListFragment_to_singleNoteFragment, args)
         }
+    }
+
+    private fun calendar() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_notesListFragment_to_calendarFragment)
     }
 
     private fun newNote() {
