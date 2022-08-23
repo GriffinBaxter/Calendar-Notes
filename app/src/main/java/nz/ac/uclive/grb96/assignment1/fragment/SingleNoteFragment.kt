@@ -108,6 +108,8 @@ class SingleNoteFragment : Fragment() {
         val headerBox: EditText = form.findViewById(R.id.headerBox)
         val contentBox: EditText = form.findViewById(R.id.contentBox)
 
+        builder.setNegativeButton("Cancel", null)
+
         builder.setPositiveButton("Add") { _, _ ->
             viewModel.addNoteSection(
                 note,
@@ -129,6 +131,8 @@ class SingleNoteFragment : Fragment() {
 
         val dueDatePicker: DatePicker = form.findViewById(R.id.dueDatePicker)
         val contentBox: EditText = form.findViewById(R.id.contentBox)
+
+        builder.setNegativeButton("Cancel", null)
 
         builder.setPositiveButton("Add") { _, _ ->
             viewModel.addNoteSection(
@@ -188,22 +192,27 @@ class SingleNoteFragment : Fragment() {
             timePicker.show()
         }
 
-        builder.setPositiveButton("Add") { _, _ ->
-            val eventTime = DateStartEndTime(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), startEndTime)
-            val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
-            if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
-                viewModel.addNoteSection(
-                    note,
-                    noteSection
-                )
-                writeData(requireActivity(), viewModel.notes.value!!)
-                updateNoteSections(note)
-            } else {
-                Toast.makeText(requireContext(), "Unable to add section, start time must be before end time. Please try again.", Toast.LENGTH_LONG).show()
-            }
-        }
+        builder.setNegativeButton("Cancel", null)
 
-        builder.show()
+        builder.setPositiveButton("Add", null).create().apply {
+            setOnShowListener {
+                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val eventTime = DateStartEndTime(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), startEndTime)
+                    val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
+                    if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
+                        viewModel.addNoteSection(
+                            note,
+                            noteSection
+                        )
+                        writeData(requireActivity(), viewModel.notes.value!!)
+                        updateNoteSections(note)
+                        dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), "Sorry, the start time must be before the end time. Please try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }.show()
     }
 
     private fun updateNoteSections(note: Note) {

@@ -62,23 +62,28 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         val noteTypeSpinner: Spinner = form.findViewById(R.id.noteTypeSpinner)
         noteTypeSpinner.adapter = adapter
 
-        builder.setPositiveButton("Add") { _, _ ->
-            val noteType: NoteType = if (noteTypeSpinner.selectedItem.toString() == "Standard") {
-                NoteType.STANDARD
-            } else if (noteTypeSpinner.selectedItem.toString() == "Due Dates") {
-                NoteType.DUE_DATES
-            } else {
-                NoteType.EVENTS
-            }
+        builder.setNegativeButton("Cancel", null)
 
-            if (viewModel.getNoteFromName(nameBox.text.toString()) != null) {
-                Toast.makeText(requireContext(), "Unable to add note, a note with the name \"${nameBox.text}\" already exists. Please try again.", Toast.LENGTH_LONG).show()
-            } else {
-                viewModel.addNote(Note(nameBox.text.toString(), noteType, arrayListOf()))
-                writeData(requireActivity(), viewModel.notes.value!!)
-            }
-        }
+        builder.setPositiveButton("Add", null).create().apply {
+            setOnShowListener {
+                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val noteType: NoteType = if (noteTypeSpinner.selectedItem.toString() == "Standard") {
+                        NoteType.STANDARD
+                    } else if (noteTypeSpinner.selectedItem.toString() == "Due Dates") {
+                        NoteType.DUE_DATES
+                    } else {
+                        NoteType.EVENTS
+                    }
 
-        builder.show()
+                    if (viewModel.getNoteFromName(nameBox.text.toString()) == null) {
+                        viewModel.addNote(Note(nameBox.text.toString(), noteType, arrayListOf()))
+                        writeData(requireActivity(), viewModel.notes.value!!)
+                        dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), "Sorry, a note with the name \"${nameBox.text}\" already exists. Please try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }.show()
     }
 }
