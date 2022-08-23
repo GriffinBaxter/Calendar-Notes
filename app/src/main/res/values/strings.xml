@@ -17,4 +17,5 @@
     <string name="delete_section">Delete Section</string>
     <string name="share_note">Share Note</string>
     <string name="choose_section_to_delete_n_in_order_of_creation">Choose section to delete\n(in order of creation)</string>
+    <string name="delete_mode">Delete Mode</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import nz.ac.uclive.grb96.assignment1.*
 import nz.ac.uclive.grb96.assignment1.model.note.Note
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
@@ -20,6 +21,8 @@ import nz.ac.uclive.grb96.assignment1.util.writeData
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 
     private val viewModel: NotesViewModel by activityViewModels()
+
+    private var deleteMode = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +42,16 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
             newNote()
         }
 
+        val deleteModeSwitch: SwitchMaterial = view.findViewById(R.id.deleteModeSwitch)
+        deleteModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                deleteMode = true
+                Toast.makeText(requireContext(), "Warning: delete mode will cause any selected note to be deleted.", Toast.LENGTH_LONG).show()
+            } else {
+                deleteMode = false
+            }
+        }
+
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = noteAdapter
         return view
@@ -46,8 +59,14 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 
     override fun onNoteClick(position: Int) {
         val note = viewModel.notes.value!![position]
-        val args = bundleOf("name" to note.name)
-        Navigation.findNavController(requireView()).navigate(R.id.action_notesListFragment_to_singleNoteFragment, args)
+        if (deleteMode) {
+            viewModel.deleteNote(note)
+            Toast.makeText(requireContext(), "Successfully deleted note.", Toast.LENGTH_LONG).show()
+            writeData(requireActivity(), viewModel.notes.value!!)
+        } else {
+            val args = bundleOf("name" to note.name)
+            Navigation.findNavController(requireView()).navigate(R.id.action_notesListFragment_to_singleNoteFragment, args)
+        }
     }
 
     private fun newNote() {

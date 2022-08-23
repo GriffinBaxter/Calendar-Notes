@@ -25,6 +25,12 @@ class NotesViewModel: ViewModel() {
         _numNotes.value = _notes.value!!.size
     }
 
+    fun deleteNote(note: Note) {
+        _notes.value?.remove(note)
+        _notes.notifyObserver()
+        _numNotes.value = _notes.value!!.size
+    }
+
     fun addNoteSection(note: Note, noteSection: NoteSection) {
         note.sections.add(noteSection)
         _notes.notifyObserver()
