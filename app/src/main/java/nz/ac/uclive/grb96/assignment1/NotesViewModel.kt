@@ -3,6 +3,7 @@ package nz.ac.uclive.grb96.assignment1
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import nz.ac.uclive.grb96.assignment1.model.notes.Note
 
 class NotesViewModel: ViewModel() {
 

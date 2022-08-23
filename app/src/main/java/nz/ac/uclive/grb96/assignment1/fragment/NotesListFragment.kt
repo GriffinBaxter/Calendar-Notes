@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.assignment1.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +11,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import nz.ac.uclive.grb96.assignment1.*
+import nz.ac.uclive.grb96.assignment1.model.notes.Note
+import nz.ac.uclive.grb96.assignment1.model.notes.NoteType
+import nz.ac.uclive.grb96.assignment1.util.readData
+import nz.ac.uclive.grb96.assignment1.util.writeData
 
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 

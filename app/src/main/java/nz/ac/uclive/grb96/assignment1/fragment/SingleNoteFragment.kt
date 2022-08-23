@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.assignment1.fragment
 
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -13,6 +13,14 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
+import nz.ac.uclive.grb96.assignment1.*
+import nz.ac.uclive.grb96.assignment1.model.datestimes.DateStartEndTime
+import nz.ac.uclive.grb96.assignment1.model.datestimes.StartEndTime
+import nz.ac.uclive.grb96.assignment1.model.datestimes.YearMonthDay
+import nz.ac.uclive.grb96.assignment1.model.notes.Note
+import nz.ac.uclive.grb96.assignment1.model.notes.NoteType
+import nz.ac.uclive.grb96.assignment1.util.readData
+import nz.ac.uclive.grb96.assignment1.util.writeData
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -145,21 +153,21 @@ class SingleNoteFragment : Fragment() {
         val contentBox: EditText = form.findViewById(R.id.contentBox)
         val timeText: TextView = form.findViewById(R.id.timeText)
 
-        val dateStartEndHourMinute = DateStartEndHourMinute(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), 12, 0, 13, 0)
+        val startEndTime = StartEndTime(12, 0, 13, 0)
 
-        timeText.text = getTimeText(dateStartEndHourMinute)
+        timeText.text = getTimeText(startEndTime)
 
         val startTimeButton: Button = form.findViewById(R.id.startTimeButton)
         startTimeButton.setOnClickListener {
             val timePicker = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
-                    dateStartEndHourMinute.startHour = hour
-                    dateStartEndHourMinute.startMinute = minute
-                    timeText.text = getTimeText(dateStartEndHourMinute)
+                    startEndTime.startHour = hour
+                    startEndTime.startMinute = minute
+                    timeText.text = getTimeText(startEndTime)
                 },
-                dateStartEndHourMinute.startHour,
-                dateStartEndHourMinute.startMinute,
+                startEndTime.startHour,
+                startEndTime.startMinute,
                 false,
             )
             timePicker.show()
@@ -169,24 +177,21 @@ class SingleNoteFragment : Fragment() {
             val timePicker = TimePickerDialog(
                 requireContext(),
                 { _, hour, minute ->
-                    dateStartEndHourMinute.endHour = hour
-                    dateStartEndHourMinute.endMinute = minute
-                    timeText.text = getTimeText(dateStartEndHourMinute)
+                    startEndTime.endHour = hour
+                    startEndTime.endMinute = minute
+                    timeText.text = getTimeText(startEndTime)
                 },
-                dateStartEndHourMinute.endHour,
-                dateStartEndHourMinute.endMinute,
+                startEndTime.endHour,
+                startEndTime.endMinute,
                 false,
             )
             timePicker.show()
         }
 
         builder.setPositiveButton("Add") { _, _ ->
-            dateStartEndHourMinute.date.year = datePicker.year
-            dateStartEndHourMinute.date.month = datePicker.month
-            dateStartEndHourMinute.date.day = datePicker.dayOfMonth
-
-            val noteSection = NoteSection(contentBox.text.toString(), eventTime = dateStartEndHourMinute)
-            if (noteSection.eventTime!!.getEventsLocalTimeStart() < noteSection.eventTime.getEventsLocalTimeEnd()) {
+            val eventTime = DateStartEndTime(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), startEndTime)
+            val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
+            if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
                 viewModel.addNoteSection(
                     note,
                     noteSection
@@ -244,12 +249,12 @@ class SingleNoteFragment : Fragment() {
             NoteType.EVENTS -> {
                 val dateTimes = arrayListOf<LocalDateTime>()
                 for (section: NoteSection in note.sections) {
-                    dateTimes.add(section.eventTime!!.getEventsLocalDateTimeStart())
+                    dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
                 }
                 val sortedDateTimes = dateTimes.sorted()
                 for (dateTime: LocalDateTime in sortedDateTimes) {
                     for (section: NoteSection in note.sections) {
-                        if (dateTime == section.eventTime!!.getEventsLocalDateTimeStart()) {
+                        if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
                             noteText
                                 .bold { append(dateTime.dayOfMonth.toString()) }
                                 .append(" ")
@@ -257,7 +262,7 @@ class SingleNoteFragment : Fragment() {
                                 .append(" ")
                                 .bold { append(dateTime.year.toString()) }
                                 .bold { append(" (") }
-                                .bold { append(getTimeText(section.eventTime)) }
+                                .bold { append(getTimeText(section.eventTime.time)) }
                                 .bold { append(")") }
                                 .append("\n")
                                 .append(section.content)
@@ -271,7 +276,7 @@ class SingleNoteFragment : Fragment() {
         return noteText
     }
 
-    private fun getTimeText(dateStartEndHourMinute: DateStartEndHourMinute): String {
-        return dateStartEndHourMinute.getEventsLocalTimeStart().toString() + " - " + dateStartEndHourMinute.getEventsLocalTimeEnd().toString()
+    private fun getTimeText(startEndTime: StartEndTime): String {
+        return startEndTime.getEventsLocalStartTime().toString() + " - " + startEndTime.getEventsLocalEndTime().toString()
     }
 }

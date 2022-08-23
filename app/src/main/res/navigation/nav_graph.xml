@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/notesListFragment"
-        android:name="nz.ac.uclive.grb96.assignment1.NotesListFragment"
+        android:name="nz.ac.uclive.grb96.assignment1.fragment.NotesListFragment"
         android:label="fragment_notes_list"
         tools:layout="@layout/fragment_notes_list" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/singleNoteFragment"
-        android:name="nz.ac.uclive.grb96.assignment1.SingleNoteFragment"
+        android:name="nz.ac.uclive.grb96.assignment1.fragment.SingleNoteFragment"
         android:label="fragment_single_note"
         tools:layout="@layout/fragment_single_note" >
         <argument
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/calendarFragment"
-        android:name="nz.ac.uclive.grb96.assignment1.CalendarFragment"
+        android:name="nz.ac.uclive.grb96.assignment1.fragment.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
 </navigation>

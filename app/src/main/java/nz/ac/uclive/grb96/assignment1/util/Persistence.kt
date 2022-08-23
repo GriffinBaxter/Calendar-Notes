@@ -1,8 +1,11 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.assignment1.util
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
+import nz.ac.uclive.grb96.assignment1.NotesViewModel
+import nz.ac.uclive.grb96.assignment1.model.notes.AllNotes
+import nz.ac.uclive.grb96.assignment1.model.notes.Note
 import java.io.File
 import java.io.FileNotFoundException
 
