@@ -13,20 +13,25 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import nz.ac.uclive.grb96.assignment1.*
 import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
 import nz.ac.uclive.grb96.assignment1.model.datetime.StartEndTime
 import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
 import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 import nz.ac.uclive.grb96.assignment1.util.readData
 import nz.ac.uclive.grb96.assignment1.util.writeData
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class SingleNoteFragment : Fragment() {
+class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
     private val viewModel: NotesViewModel by activityViewModels()
+
+    private lateinit var note: Note
+    private lateinit var deleteSectionAlertDialog: AlertDialog
 
     private lateinit var noteSections: TextView
 
@@ -38,7 +43,7 @@ class SingleNoteFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_single_note, container, false)
         val name = arguments?.getString("name")!!
-        val note = viewModel.getNoteFromName(name)!!
+        note = viewModel.getNoteFromName(name)!!
 
         val noteName = view.findViewById<TextView>(R.id.note_name)
         noteName.text = note.name
@@ -46,6 +51,20 @@ class SingleNoteFragment : Fragment() {
         val newSectionButton: Button = view.findViewById(R.id.newSectionButton)
         newSectionButton.setOnClickListener {
             newSection(note)
+        }
+
+        val sectionAdapter = SectionsAdapter(note.sections,this)
+
+        val deleteSectionButton: Button = view.findViewById(R.id.deleteSectionButton)
+        deleteSectionButton.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
+            builder.setView(form)
+
+            val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
+            recyclerView.adapter = sectionAdapter
+
+            deleteSectionAlertDialog = builder.show()
         }
 
         val shareButton: Button = view.findViewById(R.id.shareButton)
@@ -63,6 +82,15 @@ class SingleNoteFragment : Fragment() {
         updateNoteSections(note)
 
         return view
+    }
+
+    override fun onSectionClick(position: Int) {
+        val section = note.sections[position]
+        viewModel.deleteNoteSection(note, section)
+        Toast.makeText(requireContext(), "Successfully deleted section.", Toast.LENGTH_LONG).show()
+        writeData(requireActivity(), viewModel.notes.value!!)
+        updateNoteSections(note)
+        deleteSectionAlertDialog.dismiss()
     }
 
     private fun dispatchAction(optionId: Int, note: Note) {

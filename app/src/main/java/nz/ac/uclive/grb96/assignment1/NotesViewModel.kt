@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
 import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
 import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 
 class NotesViewModel: ViewModel() {
@@ -26,6 +27,11 @@ class NotesViewModel: ViewModel() {
 
     fun addNoteSection(note: Note, noteSection: NoteSection) {
         note.sections.add(noteSection)
+        _notes.notifyObserver()
+    }
+
+    fun deleteNoteSection(note: Note, noteSection: NoteSection) {
+        note.sections.remove(noteSection)
         _notes.notifyObserver()
     }
 

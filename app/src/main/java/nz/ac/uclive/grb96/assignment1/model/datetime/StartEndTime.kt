@@ -10,4 +10,8 @@ class StartEndTime (var startHour: Int, var startMinute: Int, var endHour: Int, 
     fun getEventsLocalEndTime(): LocalTime {
         return LocalTime.of(endHour, endMinute)
     }
+
+    override fun toString(): String {
+        return "${getEventsLocalStartTime()} - ${getEventsLocalEndTime()}"
+    }
 }

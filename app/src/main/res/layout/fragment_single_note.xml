@@ -24,10 +24,17 @@
         android:layout_marginHorizontal="10dp"/>
 
     <Button
+        android:id="@+id/deleteSectionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_section"
+        android:layout_marginHorizontal="10dp"/>
+
+    <Button
         android:id="@+id/shareButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Share Note"
+        android:text="@string/share_note"
         android:layout_marginHorizontal="10dp"/>
 
     <ScrollView
