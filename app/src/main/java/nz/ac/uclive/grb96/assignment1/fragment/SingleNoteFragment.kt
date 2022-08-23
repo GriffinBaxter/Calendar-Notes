@@ -110,16 +110,24 @@ class SingleNoteFragment : Fragment() {
 
         builder.setNegativeButton("Cancel", null)
 
-        builder.setPositiveButton("Add") { _, _ ->
-            viewModel.addNoteSection(
-                note,
-                NoteSection(contentBox.text.toString(), header = headerBox.text.toString())
-            )
-            writeData(requireActivity(), viewModel.notes.value!!)
-            updateNoteSections(note)
-        }
-
-        builder.show()
+        builder.setPositiveButton("Add", null).create().apply {
+            setOnShowListener {
+                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val header = headerBox.text.toString()
+                    if (viewModel.getNoteFromHeader(header) == null) {
+                        viewModel.addNoteSection(
+                            note,
+                            NoteSection(contentBox.text.toString(), header = header)
+                        )
+                        writeData(requireActivity(), viewModel.notes.value!!)
+                        updateNoteSections(note)
+                        dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), "Sorry, a note's section with that header already exists. Please try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }.show()
     }
 
     private fun newDueDatesSection(
@@ -134,16 +142,24 @@ class SingleNoteFragment : Fragment() {
 
         builder.setNegativeButton("Cancel", null)
 
-        builder.setPositiveButton("Add") { _, _ ->
-            viewModel.addNoteSection(
-                note,
-                NoteSection(contentBox.text.toString(), dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth))
-            )
-            writeData(requireActivity(), viewModel.notes.value!!)
-            updateNoteSections(note)
-        }
-
-        builder.show()
+        builder.setPositiveButton("Add", null).create().apply {
+            setOnShowListener {
+                getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    val dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth)
+                    if (viewModel.getNoteFromDueDate(dueDate) == null) {
+                        viewModel.addNoteSection(
+                            note,
+                            NoteSection(contentBox.text.toString(), dueDate = dueDate)
+                        )
+                        writeData(requireActivity(), viewModel.notes.value!!)
+                        updateNoteSections(note)
+                        dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), "Sorry, a note's section with that due date already exists. Please try again.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }.show()
     }
 
     private fun newEventsSection(
@@ -198,17 +214,21 @@ class SingleNoteFragment : Fragment() {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     val eventTime = DateStartEndTime(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), startEndTime)
-                    val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
-                    if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
-                        viewModel.addNoteSection(
-                            note,
-                            noteSection
-                        )
-                        writeData(requireActivity(), viewModel.notes.value!!)
-                        updateNoteSections(note)
-                        dismiss()
+                    if (viewModel.getOverlappingNoteFromEventTime(eventTime) == null) {
+                        val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
+                        if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
+                            viewModel.addNoteSection(
+                                note,
+                                noteSection
+                            )
+                            writeData(requireActivity(), viewModel.notes.value!!)
+                            updateNoteSections(note)
+                            dismiss()
+                        } else {
+                            Toast.makeText(requireContext(), "Sorry, the start time must be before the end time. Please try again.", Toast.LENGTH_LONG).show()
+                        }
                     } else {
-                        Toast.makeText(requireContext(), "Sorry, the start time must be before the end time. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Sorry, an event overlaps with the selected date/times. Please try again.", Toast.LENGTH_LONG).show()
                     }
                 }
             }

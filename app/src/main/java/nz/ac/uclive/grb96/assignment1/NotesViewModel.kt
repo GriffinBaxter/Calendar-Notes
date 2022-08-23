@@ -3,7 +3,10 @@ package nz.ac.uclive.grb96.assignment1
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
+import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
 import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 
 class NotesViewModel: ViewModel() {
 
@@ -30,6 +33,52 @@ class NotesViewModel: ViewModel() {
         for (note: Note in _notes.value!!) {
             if (note.name == name) {
                 return note
+            }
+        }
+        return null
+    }
+
+    fun getNoteFromHeader(header: String): Note? {
+        for (note: Note in _notes.value!!) {
+            if (note.type == NoteType.STANDARD) {
+                for (section: NoteSection in note.sections) {
+                    if (section.header!! == header) {
+                        return note
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    fun getNoteFromDueDate(dueDate: YearMonthDay): Note? {
+        for (note: Note in _notes.value!!) {
+            if (note.type == NoteType.DUE_DATES) {
+                for (section: NoteSection in note.sections) {
+                    if (section.dueDate!! == dueDate) {
+                        return note
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    fun getOverlappingNoteFromEventTime(eventTime: DateStartEndTime): Note? {
+        for (note: Note in _notes.value!!) {
+            if (note.type == NoteType.EVENTS) {
+                for (section: NoteSection in note.sections) {
+                    val sectionStartTime = section.eventTime!!.time.getEventsLocalStartTime()
+                    val sectionEndTime = section.eventTime.time.getEventsLocalEndTime()
+                    val givenStartTime = eventTime.time.getEventsLocalStartTime()
+                    val givenEndTime = eventTime.time.getEventsLocalEndTime()
+                    if (
+                        (section.eventTime.date == eventTime.date) &&
+                        (sectionStartTime < givenEndTime) && (givenStartTime < sectionEndTime)
+                    ) {
+                        return note
+                    }
+                }
             }
         }
         return null
