@@ -6,10 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.text.bold
+import androidx.core.text.italic
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -36,54 +35,77 @@ class CalendarFragment : Fragment() {
     private lateinit var dayText: TextView
     private lateinit var calendarText: TextView
 
+    private val publicHolidaysApi = "https://date.nager.at/api/v3"
+    private lateinit var countrySpinner: Spinner
+    private val countryToCode = HashMap<String, String>()
+    private var dateToPublicHoliday = HashMap<LocalDate, String>()
+    private var publicHolidaysLoaded = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
 
+        countrySpinner = view.findViewById(R.id.countrySpinner)
         dayText = view.findViewById(R.id.dayText)
         calendarText = view.findViewById(R.id.calendarText)
 
-        updateDay()
+        updateText()
 
         val previousDayButton: Button = view.findViewById(R.id.previousDayButton)
         previousDayButton.setOnClickListener {
-            date = date.minusDays(1)
-            updateDay()
+            val oldDate = date
+            val newDate = date.minusDays(1)
+            date = newDate
+            if (newDate.year != oldDate.year) {
+                getPublicHolidays()
+            }
+            updateText()
         }
 
         val nextDayButton: Button = view.findViewById(R.id.nextDayButton)
         nextDayButton.setOnClickListener {
-            date = date.plusDays(1)
-            updateDay()
+            val oldDate = date
+            val newDate = date.plusDays(1)
+            date = newDate
+            if (newDate.year != oldDate.year) {
+                getPublicHolidays()
+            }
+            updateText()
         }
+
+        getCountries()
 
         return view
     }
 
-    private fun updateDay() {
-        updateText()
-        getPublicHolidays()  // TODO: retrieve new public holidays only on country or year change
-    }
-
     private fun updateText() {
         dayText.text = "${date.dayOfMonth} ${date.month} ${date.year}"
-        calendarText.text = getCalendarDayText()
+        if (!publicHolidaysLoaded) {
+            updateCalendarDayText("Loading...")
+        } else {
+            updateCalendarDayText(dateToPublicHoliday[date])
+        }
     }
 
-    private fun getCalendarDayText(): SpannableStringBuilder {
+    private fun updateCalendarDayText(publicHoliday: String?) {
         val calendarDayText = SpannableStringBuilder()
+
         val dueDateSection: NoteSection? = viewModel.getDueDateSectionFromDate(date)
-        if (dueDateSection != null) {
-            calendarDayText
-                .bold { append("DUE\n") }
-                .append(dueDateSection.content)
+        calendarDayText.bold { append("DUE\n") }
+        if (dueDateSection == null) {
+            calendarDayText.italic { append("Nothing due") }
+        } else {
+            calendarDayText.append(dueDateSection.content)
         }
+
         val eventSections: List<NoteSection> = viewModel.getEventSectionsFromDate(date)
-        if (eventSections.isNotEmpty()) {
-            calendarDayText
-                .bold { append("\n\n\nEVENTS\n\n") }
+        calendarDayText
+            .bold { append("\n\nEVENTS\n") }
+        if (eventSections.isEmpty()) {
+            calendarDayText.italic { append("No events") }
+        } else {
             val dateTimes = arrayListOf<LocalDateTime>()
             for (section: NoteSection in eventSections) {
                 dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
@@ -93,33 +115,89 @@ class CalendarFragment : Fragment() {
                 for (section: NoteSection in eventSections) {
                     if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
                         calendarDayText
-                            .bold { append(getTimeText(section.eventTime.time)) }
+                            .italic { bold { append(getTimeText(section.eventTime.time)) } }
                             .append("\n")
                             .append(section.content)
-                            .append("\n\n")
+                            .append("\n")
                         break
                     }
                 }
             }
         }
-        if (calendarDayText.isEmpty()) {
-            calendarDayText.append("Nothing due and no events.")
+
+        calendarDayText
+            .bold { append("\n\nPUBLIC HOLIDAY\n") }
+        if (publicHoliday == null) {
+            calendarDayText.italic { append("No public holiday") }
+        } else {
+            calendarDayText.append(publicHoliday)
         }
-        return calendarDayText
+
+        calendarText.text = calendarDayText
+    }
+
+    private fun getCountries() {
+        var countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, arrayListOf("Loading..."))
+        countrySpinner.adapter = countryAdapter
+        val publicHolidaysUrl = URL("${publicHolidaysApi}/AvailableCountries")
+        val deviceCountryCode: String = requireContext().resources.configuration.locales.get(0).country
+        var deviceCountryName: String? = null
+        lifecycleScope.launch {
+            try {
+                val result = getJsonArray(publicHolidaysUrl)
+                for (index in 0 until result.length()) {
+                    val country = result.getJSONObject(index)
+                    val name = country.getString("name")
+                    val code = country.getString("countryCode")
+                    countryToCode[name] = code
+                    if (code == deviceCountryCode) {
+                        deviceCountryName = name
+                    }
+                }
+                val sortedCountries = countryToCode.keys.sorted()
+                countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, sortedCountries)
+                countrySpinner.adapter = countryAdapter
+                if (deviceCountryName != null) {
+                    countrySpinner.setSelection(sortedCountries.indexOf(deviceCountryName))
+                }
+                setCountryListener()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: country searching unavailable.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun setCountryListener() {
+        val countryListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                getPublicHolidays()
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                getPublicHolidays()
+            }
+        }
+        countrySpinner.onItemSelectedListener = countryListener
     }
 
     private fun getPublicHolidays() {
-        val publicHolidaysUrl = URL("https://date.nager.at/api/v3/PublicHolidays/${date.year}/NZ")  // TODO: make country selectable using /AvailableCountries endpoint
+        publicHolidaysLoaded = false
+        dateToPublicHoliday = HashMap()
+        updateText()
+        val countryCode = countryToCode[countrySpinner.selectedItem.toString()]
+        val publicHolidaysUrl = URL("${publicHolidaysApi}/PublicHolidays/${date.year}/${countryCode}")
         lifecycleScope.launch {
             try {
                 val result = getJsonArray(publicHolidaysUrl)
                 for (index in 0 until result.length()) {
                     val publicHoliday = result.getJSONObject(index)
-                    val publicHolidayDate = publicHoliday.getString("date").split("-")
-                    if (date == LocalDate.of(publicHolidayDate[0].toInt(), publicHolidayDate[1].toInt(), publicHolidayDate[2].toInt())) {
-                        Toast.makeText(requireContext(), publicHoliday.getString("name"), Toast.LENGTH_LONG).show()  // TODO: Add to text instead of toast message
-                    }
+                    val publicHolidayDateList = publicHoliday.getString("date").split("-")
+                    val publicHolidayLocalDate = LocalDate.of(publicHolidayDateList[0].toInt(), publicHolidayDateList[1].toInt(), publicHolidayDateList[2].toInt())
+                    val publicHolidayName = publicHoliday.getString("name")
+                    dateToPublicHoliday[publicHolidayLocalDate] = publicHolidayName
                 }
+                publicHolidaysLoaded = true
+                updateText()
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error: public holiday searching unavailable.", Toast.LENGTH_LONG).show()
             }
