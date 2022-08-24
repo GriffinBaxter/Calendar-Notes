@@ -23,6 +23,7 @@ import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 import nz.ac.uclive.grb96.assignment1.util.getTimeText
 import nz.ac.uclive.grb96.assignment1.util.readData
+import nz.ac.uclive.grb96.assignment1.util.removeWhitespaceAndTrim
 import nz.ac.uclive.grb96.assignment1.util.writeData
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -88,7 +89,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
     override fun onSectionClick(position: Int) {
         val section = note.sections[position]
         viewModel.deleteNoteSection(note, section)
-        Toast.makeText(requireContext(), resources.getString(R.string.success_delete_section), Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), resources.getString(R.string.success_delete_section), Toast.LENGTH_SHORT).show()
         writeData(requireActivity(), viewModel.notes.value!!)
         updateNoteSections(note)
         deleteSectionAlertDialog.dismiss()
@@ -142,11 +143,16 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    val header = headerBox.text.toString()
-                    if (viewModel.getNoteFromHeader(header) == null) {
+                    val header = removeWhitespaceAndTrim(headerBox.text.toString())
+                    val content = removeWhitespaceAndTrim(contentBox.text.toString())
+                    if (header.isEmpty()) {
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_section_header_empty), Toast.LENGTH_LONG).show()
+                    } else if (content.isEmpty()) {
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_section_content_empty), Toast.LENGTH_LONG).show()
+                    } else if (viewModel.getNoteFromHeader(header) == null) {
                         viewModel.addNoteSection(
                             note,
-                            NoteSection(contentBox.text.toString(), header = header)
+                            NoteSection(content, header = header)
                         )
                         writeData(requireActivity(), viewModel.notes.value!!)
                         updateNoteSections(note)
@@ -179,10 +185,13 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    if (viewModel.getNoteFromDueDate(dueDate) == null) {
+                    val content = removeWhitespaceAndTrim(contentBox.text.toString())
+                    if (content.isEmpty()) {
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_section_content_empty), Toast.LENGTH_LONG).show()
+                    } else if (viewModel.getNoteFromDueDate(dueDate) == null) {
                         viewModel.addNoteSection(
                             note,
-                            NoteSection(contentBox.text.toString(), dueDate = dueDate)
+                            NoteSection(content, dueDate = dueDate)
                         )
                         writeData(requireActivity(), viewModel.notes.value!!)
                         updateNoteSections(note)
@@ -253,8 +262,11 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     val eventTime = DateStartEndTime(date, startEndTime)
                     if (viewModel.getOverlappingNoteFromEventTime(eventTime) == null) {
-                        val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
-                        if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
+                        val content = removeWhitespaceAndTrim(contentBox.text.toString())
+                        val noteSection = NoteSection(content, eventTime = eventTime)
+                        if (content.isEmpty()) {
+                            Toast.makeText(requireContext(), resources.getString(R.string.sorry_section_content_empty), Toast.LENGTH_LONG).show()
+                        } else if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {
                             viewModel.addNoteSection(
                                 note,
                                 noteSection

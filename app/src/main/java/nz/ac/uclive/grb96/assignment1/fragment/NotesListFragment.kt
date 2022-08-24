@@ -16,6 +16,7 @@ import nz.ac.uclive.grb96.assignment1.*
 import nz.ac.uclive.grb96.assignment1.model.note.Note
 import nz.ac.uclive.grb96.assignment1.model.note.NoteType
 import nz.ac.uclive.grb96.assignment1.util.readData
+import nz.ac.uclive.grb96.assignment1.util.removeWhitespaceAndTrim
 import nz.ac.uclive.grb96.assignment1.util.writeData
 
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
@@ -66,7 +67,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         val note = viewModel.notes.value!![position]
         if (deleteMode) {
             viewModel.deleteNote(note)
-            Toast.makeText(requireContext(), resources.getString(R.string.success_delete_note), Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), resources.getString(R.string.success_delete_note), Toast.LENGTH_SHORT).show()
             writeData(requireActivity(), viewModel.notes.value!!)
         } else {
             val args = bundleOf("name" to note.name)
@@ -111,12 +112,16 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
                         NoteType.EVENTS
                     }
 
-                    if (viewModel.getNoteFromName(nameBox.text.toString()) == null) {
-                        viewModel.addNote(Note(nameBox.text.toString(), noteType, arrayListOf()))
+                    val name = removeWhitespaceAndTrim(nameBox.text.toString())
+
+                    if (name.isEmpty()) {
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_name_empty), Toast.LENGTH_LONG).show()
+                    } else if (viewModel.getNoteFromName(name) == null) {
+                        viewModel.addNote(Note(name, noteType, arrayListOf()))
                         writeData(requireActivity(), viewModel.notes.value!!)
                         dismiss()
                     } else {
-                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_name_exists, nameBox.text), Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_name_exists, name), Toast.LENGTH_LONG).show()
                     }
                 }
             }

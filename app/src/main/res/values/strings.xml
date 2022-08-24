@@ -32,7 +32,7 @@
     <string name="public_holiday">PUBLIC HOLIDAY</string>
     <string name="no_public_holiday">No public holiday</string>
     <string name="nothing_to_show">Nothing to show</string>
-    <string name="error_country_search">Error: country searching unavailable.</string>
+    <string name="error_country_search">Error: country and public holiday searching unavailable.</string>
     <string name="error_holiday_search">Error: public holiday searching unavailable.</string>
     <string name="date_format">%1$d %2$s %3$d</string>
     <string name="warning_delete_mode">Warning: delete mode will cause any selected note to be deleted.</string>
@@ -50,4 +50,7 @@
     <string name="text">Text (SMS)</string>
     <string name="how_sharing_note">How would you like to share your note?</string>
     <string name="note_type">Note Type</string>
+    <string name="sorry_note_name_empty">Sorry, the note name cannot be empty. Please try again.</string>
+    <string name="sorry_section_header_empty">Sorry, a note\'s section header cannot be empty. Please try again.</string>
+    <string name="sorry_section_content_empty">Sorry, a note\'s section content cannot be empty. Please try again.</string>
 </resources>
