@@ -41,7 +41,7 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/countrySpinnerLabel"
+        app:layout_constraintBottom_toTopOf="@id/calendarFilters"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nextDayButton">
@@ -54,6 +54,47 @@
             android:text="Calendar Text"
             android:textSize="30sp" />
     </ScrollView>
+
+
+    <TextView
+        android:id="@+id/calendarFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/calendar_filters"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/dueDatesCheckbox" />
+
+    <CheckBox
+        android:id="@+id/dueDatesCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:checked="true"
+        android:text="@string/due_dates"
+        app:layout_constraintBottom_toTopOf="@+id/countrySpinnerLabel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox
+        android:id="@+id/eventsCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:checked="true"
+        android:text="@string/events"
+        app:layout_constraintBottom_toTopOf="@+id/countrySpinnerLabel"
+        app:layout_constraintEnd_toStartOf="@+id/publicHolidaysCheckbox"
+        app:layout_constraintStart_toEndOf="@+id/dueDatesCheckbox" />
+
+    <CheckBox
+        android:id="@+id/publicHolidaysCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:checked="true"
+        android:text="@string/public_holidays"
+        app:layout_constraintBottom_toTopOf="@+id/countrySpinnerLabel"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/countrySpinnerLabel"

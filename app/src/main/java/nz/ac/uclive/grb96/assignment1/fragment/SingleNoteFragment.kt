@@ -167,6 +167,11 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setView(form)
 
         val dueDatePicker: DatePicker = form.findViewById(R.id.dueDatePicker)
+        var dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth)
+        dueDatePicker.setOnDateChangedListener { _, _, _, _ ->
+            dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth)
+        }
+
         val contentBox: EditText = form.findViewById(R.id.contentBox)
 
         builder.setNegativeButton("Cancel", null)
@@ -174,7 +179,6 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setPositiveButton("Add", null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    val dueDate = YearMonthDay(dueDatePicker.year, dueDatePicker.month, dueDatePicker.dayOfMonth)
                     if (viewModel.getNoteFromDueDate(dueDate) == null) {
                         viewModel.addNoteSection(
                             note,
@@ -199,10 +203,15 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setView(form)
 
         val datePicker: DatePicker = form.findViewById(R.id.datePicker)
+        var date = YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+        datePicker.setOnDateChangedListener { _, _, _, _ ->
+            date = YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+        }
+
         val contentBox: EditText = form.findViewById(R.id.contentBox)
         val timeText: TextView = form.findViewById(R.id.timeText)
 
-        val startEndTime = StartEndTime(12, 0, 13, 0)
+        val startEndTime = StartEndTime(10, 0, 11, 0)
 
         timeText.text = getTimeText(startEndTime)
 
@@ -242,7 +251,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         builder.setPositiveButton("Add", null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    val eventTime = DateStartEndTime(YearMonthDay(datePicker.year, datePicker.month, datePicker.dayOfMonth), startEndTime)
+                    val eventTime = DateStartEndTime(date, startEndTime)
                     if (viewModel.getOverlappingNoteFromEventTime(eventTime) == null) {
                         val noteSection = NoteSection(contentBox.text.toString(), eventTime = eventTime)
                         if (noteSection.eventTime!!.time.getEventsLocalStartTime() < noteSection.eventTime.time.getEventsLocalEndTime()) {

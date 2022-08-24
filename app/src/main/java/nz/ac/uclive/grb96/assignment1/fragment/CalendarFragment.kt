@@ -40,6 +40,9 @@ class CalendarFragment : Fragment() {
     private val countryToCode = HashMap<String, String>()
     private var dateToPublicHoliday = HashMap<LocalDate, String>()
     private var publicHolidaysLoaded = false
+    private var dueDatesEnabled = true
+    private var eventsEnabled = true
+    private var publicHolidaysEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +78,24 @@ class CalendarFragment : Fragment() {
             updateText()
         }
 
+        val dueDatesCheckBox: CheckBox = view.findViewById(R.id.dueDatesCheckbox)
+        dueDatesCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            dueDatesEnabled = isChecked
+            updateText()
+        }
+
+        val eventsCheckBox: CheckBox = view.findViewById(R.id.eventsCheckbox)
+        eventsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            eventsEnabled = isChecked
+            updateText()
+        }
+
+        val publicHolidaysCheckBox: CheckBox = view.findViewById(R.id.publicHolidaysCheckbox)
+        publicHolidaysCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            publicHolidaysEnabled = isChecked
+            updateText()
+        }
+
         getCountries()
 
         return view
@@ -92,53 +113,61 @@ class CalendarFragment : Fragment() {
     private fun updateCalendarDayText(publicHoliday: String?) {
         val calendarDayText = SpannableStringBuilder()
 
-        val dueDateSection: NoteSection? = viewModel.getDueDateSectionFromDate(date)
-        calendarDayText.bold { append("DUE\n") }
-        if (dueDateSection == null) {
-            calendarDayText.italic { append("Nothing due") }
-        } else {
-            calendarDayText.append(dueDateSection.content)
+        if (dueDatesEnabled) {
+            val dueDateSection: NoteSection? = viewModel.getDueDateSectionFromDate(date)
+            calendarDayText.bold { append("DUE\n") }
+            if (dueDateSection == null) {
+                calendarDayText.italic { append("Nothing due") }
+            } else {
+                calendarDayText.append(dueDateSection.content)
+            }
         }
 
-        val eventSections: List<NoteSection> = viewModel.getEventSectionsFromDate(date)
-        calendarDayText
-            .bold { append("\n\nEVENTS\n") }
-        if (eventSections.isEmpty()) {
-            calendarDayText.italic { append("No events") }
-        } else {
-            val dateTimes = arrayListOf<LocalDateTime>()
-            for (section: NoteSection in eventSections) {
-                dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
-            }
-            val sortedDateTimes = dateTimes.sorted()
-            for (dateTime: LocalDateTime in sortedDateTimes) {
+        if (eventsEnabled) {
+            val eventSections: List<NoteSection> = viewModel.getEventSectionsFromDate(date)
+            calendarDayText
+                .bold { append("\n\nEVENTS\n") }
+            if (eventSections.isEmpty()) {
+                calendarDayText.italic { append("No events") }
+            } else {
+                val dateTimes = arrayListOf<LocalDateTime>()
                 for (section: NoteSection in eventSections) {
-                    if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
-                        calendarDayText
-                            .italic { bold { append(getTimeText(section.eventTime.time)) } }
-                            .append("\n")
-                            .append(section.content)
-                            .append("\n")
-                        break
+                    dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
+                }
+                val sortedDateTimes = dateTimes.sorted()
+                for (dateTime: LocalDateTime in sortedDateTimes) {
+                    for (section: NoteSection in eventSections) {
+                        if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
+                            calendarDayText
+                                .italic { bold { append(getTimeText(section.eventTime.time)) } }
+                                .append("\n")
+                                .append(section.content)
+                                .append("\n")
+                            break
+                        }
                     }
                 }
             }
         }
 
-        calendarDayText
-            .bold { append("\n\nPUBLIC HOLIDAY\n") }
-        if (publicHoliday == null) {
-            calendarDayText.italic { append("No public holiday") }
-        } else {
-            calendarDayText.append(publicHoliday)
+        if (publicHolidaysEnabled) {
+            calendarDayText
+                .bold { append("\n\nPUBLIC HOLIDAY\n") }
+            if (publicHoliday == null) {
+                calendarDayText.italic { append("No public holiday") }
+            } else {
+                calendarDayText.append(publicHoliday)
+            }
+        }
+
+        if (!dueDatesEnabled && !eventsEnabled && !publicHolidaysEnabled) {
+            calendarDayText.italic { append("Nothing to show") }
         }
 
         calendarText.text = calendarDayText
     }
 
     private fun getCountries() {
-        var countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, arrayListOf("Loading..."))
-        countrySpinner.adapter = countryAdapter
         val publicHolidaysUrl = URL("${publicHolidaysApi}/AvailableCountries")
         val deviceCountryCode: String = requireContext().resources.configuration.locales.get(0).country
         var deviceCountryName: String? = null
@@ -155,7 +184,7 @@ class CalendarFragment : Fragment() {
                     }
                 }
                 val sortedCountries = countryToCode.keys.sorted()
-                countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, sortedCountries)
+                val countryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, sortedCountries)
                 countrySpinner.adapter = countryAdapter
                 if (deviceCountryName != null) {
                     countrySpinner.setSelection(sortedCountries.indexOf(deviceCountryName))
