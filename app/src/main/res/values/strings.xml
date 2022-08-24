@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">Assignment 1</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Calendar Notes</string>
     <string name="note_title">Note Title</string>
     <string name="new_section">New Section</string>
     <string name="sections">Sections</string>
@@ -26,4 +24,30 @@
     <string name="due_dates">Due Dates</string>
     <string name="events">Events</string>
     <string name="public_holidays">Public Holidays</string>
+    <string name="loading">Loading…</string>
+    <string name="due">DUE</string>
+    <string name="nothing_due">Nothing due</string>
+    <string name="events_caps">EVENTS</string>
+    <string name="no_events">No events</string>
+    <string name="public_holiday">PUBLIC HOLIDAY</string>
+    <string name="no_public_holiday">No public holiday</string>
+    <string name="nothing_to_show">Nothing to show</string>
+    <string name="error_country_search">Error: country searching unavailable.</string>
+    <string name="error_holiday_search">Error: public holiday searching unavailable.</string>
+    <string name="date_format">%1$d %2$s %3$d</string>
+    <string name="warning_delete_mode">Warning: delete mode will cause any selected note to be deleted.</string>
+    <string name="success_delete_note">Successfully deleted note.</string>
+    <string name="success_delete_section">Successfully deleted section.</string>
+    <string name="standard">Standard</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="sorry_note_name_exists">Sorry, a note with the name "%1$s" already exists. Please try again.</string>
+    <string name="sorry_note_section_header_exists">Sorry, a note\'s section with that header already exists. Please try again.</string>
+    <string name="sorry_note_section_due_date_exists">Sorry, a note\'s section with that due date already exists. Please try again.</string>
+    <string name="sorry_note_section_event_overlaps">Sorry, an event overlaps with the selected date/times. Please try again.</string>
+    <string name="sorry_start_time_before">Sorry, the start time must be before the end time. Please try again.</string>
+    <string name="email">Email</string>
+    <string name="text">Text (SMS)</string>
+    <string name="how_sharing_note">How would you like to share your note?</string>
+    <string name="note_type">Note Type</string>
 </resources>

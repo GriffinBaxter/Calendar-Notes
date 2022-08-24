@@ -51,7 +51,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         deleteModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 deleteMode = true
-                Toast.makeText(requireContext(), "Warning: delete mode will cause any selected note to be deleted.", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), resources.getString(R.string.warning_delete_mode), Toast.LENGTH_LONG).show()
             } else {
                 deleteMode = false
             }
@@ -66,7 +66,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         val note = viewModel.notes.value!![position]
         if (deleteMode) {
             viewModel.deleteNote(note)
-            Toast.makeText(requireContext(), "Successfully deleted note.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), resources.getString(R.string.success_delete_note), Toast.LENGTH_LONG).show()
             writeData(requireActivity(), viewModel.notes.value!!)
         } else {
             val args = bundleOf("name" to note.name)
@@ -86,18 +86,26 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 
         val nameBox: EditText = form.findViewById(R.id.nameBox)
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, arrayListOf("Standard", "Due Dates", "Events"))
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            arrayListOf(
+                resources.getString(R.string.standard),
+                resources.getString(R.string.due_dates),
+                resources.getString(R.string.events),
+            )
+        )
         val noteTypeSpinner: Spinner = form.findViewById(R.id.noteTypeSpinner)
         noteTypeSpinner.adapter = adapter
 
-        builder.setNegativeButton("Cancel", null)
+        builder.setNegativeButton(resources.getString(R.string.cancel), null)
 
-        builder.setPositiveButton("Add", null).create().apply {
+        builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                    val noteType: NoteType = if (noteTypeSpinner.selectedItem.toString() == "Standard") {
+                    val noteType: NoteType = if (noteTypeSpinner.selectedItem.toString() == resources.getString(R.string.standard)) {
                         NoteType.STANDARD
-                    } else if (noteTypeSpinner.selectedItem.toString() == "Due Dates") {
+                    } else if (noteTypeSpinner.selectedItem.toString() == resources.getString(R.string.due_dates)) {
                         NoteType.DUE_DATES
                     } else {
                         NoteType.EVENTS
@@ -108,7 +116,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
                         writeData(requireActivity(), viewModel.notes.value!!)
                         dismiss()
                     } else {
-                        Toast.makeText(requireContext(), "Sorry, a note with the name \"${nameBox.text}\" already exists. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_name_exists, nameBox.text), Toast.LENGTH_LONG).show()
                     }
                 }
             }

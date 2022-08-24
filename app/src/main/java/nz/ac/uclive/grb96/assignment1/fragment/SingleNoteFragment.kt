@@ -70,9 +70,9 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
         val shareButton: Button = view.findViewById(R.id.shareButton)
         shareButton.setOnClickListener {
-            val options = arrayOf("Email", "Text")
+            val options = arrayOf(resources.getString(R.string.email), resources.getString(R.string.text))
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("How would you like to share your note?")
+            builder.setTitle(resources.getString(R.string.how_sharing_note))
             builder.setItems(options) { _, optionId ->
                 dispatchAction(optionId, note)
             }
@@ -88,7 +88,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
     override fun onSectionClick(position: Int) {
         val section = note.sections[position]
         viewModel.deleteNoteSection(note, section)
-        Toast.makeText(requireContext(), "Successfully deleted section.", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), resources.getString(R.string.success_delete_section), Toast.LENGTH_LONG).show()
         writeData(requireActivity(), viewModel.notes.value!!)
         updateNoteSections(note)
         deleteSectionAlertDialog.dismiss()
@@ -137,9 +137,9 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
         val headerBox: EditText = form.findViewById(R.id.headerBox)
         val contentBox: EditText = form.findViewById(R.id.contentBox)
 
-        builder.setNegativeButton("Cancel", null)
+        builder.setNegativeButton(resources.getString(R.string.cancel), null)
 
-        builder.setPositiveButton("Add", null).create().apply {
+        builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     val header = headerBox.text.toString()
@@ -152,7 +152,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
                         updateNoteSections(note)
                         dismiss()
                     } else {
-                        Toast.makeText(requireContext(), "Sorry, a note's section with that header already exists. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_section_header_exists), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -174,9 +174,9 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
         val contentBox: EditText = form.findViewById(R.id.contentBox)
 
-        builder.setNegativeButton("Cancel", null)
+        builder.setNegativeButton(resources.getString(R.string.cancel), null)
 
-        builder.setPositiveButton("Add", null).create().apply {
+        builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     if (viewModel.getNoteFromDueDate(dueDate) == null) {
@@ -188,7 +188,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
                         updateNoteSections(note)
                         dismiss()
                     } else {
-                        Toast.makeText(requireContext(), "Sorry, a note's section with that due date already exists. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_section_due_date_exists), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -246,9 +246,9 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
             timePicker.show()
         }
 
-        builder.setNegativeButton("Cancel", null)
+        builder.setNegativeButton(resources.getString(R.string.cancel), null)
 
-        builder.setPositiveButton("Add", null).create().apply {
+        builder.setPositiveButton(resources.getString(R.string.add), null).create().apply {
             setOnShowListener {
                 getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     val eventTime = DateStartEndTime(date, startEndTime)
@@ -263,10 +263,10 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
                             updateNoteSections(note)
                             dismiss()
                         } else {
-                            Toast.makeText(requireContext(), "Sorry, the start time must be before the end time. Please try again.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), resources.getString(R.string.sorry_start_time_before), Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Sorry, an event overlaps with the selected date/times. Please try again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_section_event_overlaps), Toast.LENGTH_LONG).show()
                     }
                 }
             }

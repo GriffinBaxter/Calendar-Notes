@@ -102,9 +102,9 @@ class CalendarFragment : Fragment() {
     }
 
     private fun updateText() {
-        dayText.text = "${date.dayOfMonth} ${date.month} ${date.year}"
+        dayText.text = resources.getString(R.string.date_format, date.dayOfMonth, date.month, date.year)
         if (!publicHolidaysLoaded) {
-            updateCalendarDayText("Loading...")
+            updateCalendarDayText(resources.getString(R.string.loading))
         } else {
             updateCalendarDayText(dateToPublicHoliday[date])
         }
@@ -115,9 +115,9 @@ class CalendarFragment : Fragment() {
 
         if (dueDatesEnabled) {
             val dueDateSection: NoteSection? = viewModel.getDueDateSectionFromDate(date)
-            calendarDayText.bold { append("DUE\n") }
+            calendarDayText.bold { append("${resources.getString(R.string.due)}\n") }
             if (dueDateSection == null) {
-                calendarDayText.italic { append("Nothing due") }
+                calendarDayText.italic { append(resources.getString(R.string.nothing_due)) }
             } else {
                 calendarDayText.append(dueDateSection.content)
             }
@@ -126,9 +126,9 @@ class CalendarFragment : Fragment() {
         if (eventsEnabled) {
             val eventSections: List<NoteSection> = viewModel.getEventSectionsFromDate(date)
             calendarDayText
-                .bold { append("\n\nEVENTS\n") }
+                .bold { append("\n\n${resources.getString(R.string.events_caps)}\n") }
             if (eventSections.isEmpty()) {
-                calendarDayText.italic { append("No events") }
+                calendarDayText.italic { append(resources.getString(R.string.no_events)) }
             } else {
                 val dateTimes = arrayListOf<LocalDateTime>()
                 for (section: NoteSection in eventSections) {
@@ -152,16 +152,16 @@ class CalendarFragment : Fragment() {
 
         if (publicHolidaysEnabled) {
             calendarDayText
-                .bold { append("\n\nPUBLIC HOLIDAY\n") }
+                .bold { append("\n\n${resources.getString(R.string.public_holiday)}\n") }
             if (publicHoliday == null) {
-                calendarDayText.italic { append("No public holiday") }
+                calendarDayText.italic { append(resources.getString(R.string.no_public_holiday)) }
             } else {
                 calendarDayText.append(publicHoliday)
             }
         }
 
         if (!dueDatesEnabled && !eventsEnabled && !publicHolidaysEnabled) {
-            calendarDayText.italic { append("Nothing to show") }
+            calendarDayText.italic { append(resources.getString(R.string.nothing_to_show)) }
         }
 
         calendarText.text = calendarDayText
@@ -191,7 +191,7 @@ class CalendarFragment : Fragment() {
                 }
                 setCountryListener()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: country searching unavailable.", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), resources.getString(R.string.error_country_search), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -228,7 +228,7 @@ class CalendarFragment : Fragment() {
                 publicHolidaysLoaded = true
                 updateText()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: public holiday searching unavailable.", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), resources.getString(R.string.error_holiday_search), Toast.LENGTH_LONG).show()
             }
         }
     }
