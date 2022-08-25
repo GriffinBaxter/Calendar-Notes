@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Calendar Notes</string>
     <string name="note_title">Note Title</string>
-    <string name="new_section">New Section</string>
-    <string name="sections">Sections</string>
+    <string name="new_section">Create Section</string>
     <string name="header">Header</string>
     <string name="content">Content</string>
     <string name="create_note">Create Note</string>
