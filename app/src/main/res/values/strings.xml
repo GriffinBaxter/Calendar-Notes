@@ -5,7 +5,7 @@
     <string name="sections">Sections</string>
     <string name="header">Header</string>
     <string name="content">Content</string>
-    <string name="new_note">New Note</string>
+    <string name="create_note">Create Note</string>
     <string name="name">Name</string>
     <string name="due_date">Due Date</string>
     <string name="pick_start_time">Pick Start Time</string>
@@ -16,7 +16,7 @@
     <string name="share_note">Share Note</string>
     <string name="choose_a_section_to_delete">Please choose a section to delete</string>
     <string name="delete_mode">Delete Mode</string>
-    <string name="calendar">Calendar</string>
+    <string name="calendar">Open Calendar</string>
     <string name="previous_day">Previous Day</string>
     <string name="next_day">Next Day</string>
     <string name="select_country_for_public_holidays">Select country for public holidays</string>
@@ -53,4 +53,5 @@
     <string name="sorry_note_name_empty">Sorry, the note name cannot be empty. Please try again.</string>
     <string name="sorry_section_header_empty">Sorry, a note\'s section header cannot be empty. Please try again.</string>
     <string name="sorry_section_content_empty">Sorry, a note\'s section content cannot be empty. Please try again.</string>
+    <string name="your_notes">Your Notes</string>
 </resources>

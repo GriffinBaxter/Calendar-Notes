@@ -5,28 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.NotesListFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <Button
-        android:id="@+id/calendarButton"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/calendar" />
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
-    <Button
-        android:id="@+id/newNoteButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:text="@string/new_note" />
+        <Button
+            android:id="@+id/calendarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/calendar"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/newNoteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_gravity="bottom"
+            android:text="@string/create_note"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/deleteModeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_gravity="center"
         android:text="@string/delete_mode" />
+
+    <TextView
+        android:id="@+id/yourNotesText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/your_notes"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
