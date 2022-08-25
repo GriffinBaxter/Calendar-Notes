@@ -1,0 +1,23 @@
+<?xml version ="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="calendar"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/calendar_shortcut">
+        <intent
+            android:action="nz.ac.uclive.grb96.assignment1.shortcuts.calendar"
+            android:targetPackage="nz.ac.uclive.grb96.assignment1"
+            android:targetClass="nz.ac.uclive.grb96.assignment1.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="notes"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/notes_shortcut">
+        <intent
+            android:action="nz.ac.uclive.grb96.assignment1.shortcuts.notes"
+            android:targetPackage="nz.ac.uclive.grb96.assignment1"
+            android:targetClass="nz.ac.uclive.grb96.assignment1.MainActivity" />
+    </shortcut>
+</shortcuts>

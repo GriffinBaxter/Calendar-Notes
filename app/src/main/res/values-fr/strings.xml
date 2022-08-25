@@ -56,4 +56,6 @@
     <string name="view_your_notes">Afficher vos notes</string>
     <string name="no_sections_in_note">Désolé, il n\'y a aucune section dans cette note à supprimer.</string>
     <string name="no_sections">Aucune rubrique</string>
+    <string name="calendar_shortcut">Calendrier</string>
+    <string name="notes_shortcut">Remarques</string>
 </resources>

@@ -56,4 +56,6 @@
     <string name="view_your_notes">View Your Notes</string>
     <string name="no_sections_in_note">Sorry, there are no sections in this note to delete.</string>
     <string name="no_sections">No sections</string>
+    <string name="calendar_shortcut">Calendar</string>
+    <string name="notes_shortcut">Notes</string>
 </resources>

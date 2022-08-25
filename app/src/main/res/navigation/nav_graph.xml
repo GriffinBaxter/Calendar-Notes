@@ -5,6 +5,20 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <action
+        android:id="@+id/action_global_calendar"
+        app:destination="@id/calendarFragment"
+        app:launchSingleTop="false"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_notes"
+        app:destination="@id/notesListFragment"
+        app:launchSingleTop="false"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
+
     <fragment
         android:id="@+id/notesListFragment"
         android:name="nz.ac.uclive.grb96.assignment1.fragment.NotesListFragment"
