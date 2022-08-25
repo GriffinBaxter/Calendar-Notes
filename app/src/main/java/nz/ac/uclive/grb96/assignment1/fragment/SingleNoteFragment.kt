@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.bold
+import androidx.core.text.italic
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import nz.ac.uclive.grb96.assignment1.*
@@ -59,17 +60,21 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
         val deleteSectionButton: Button = view.findViewById(R.id.deleteSectionButton)
         deleteSectionButton.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
-            builder.setView(form)
+            if (note.sections.isEmpty()) {
+                Toast.makeText(requireContext(), resources.getString(R.string.no_sections_in_note), Toast.LENGTH_LONG).show()
+            } else {
+                val builder = AlertDialog.Builder(requireContext())
+                val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
+                builder.setView(form)
 
-            sectionsInOrder = getSectionsOrder(note.type, note.sections)
-            val sectionAdapter = SectionsAdapter(sectionsInOrder,this)
+                sectionsInOrder = getSectionsOrder(note.type, note.sections)
+                val sectionAdapter = SectionsAdapter(sectionsInOrder,this)
 
-            val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
-            recyclerView.adapter = sectionAdapter
+                val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
+                recyclerView.adapter = sectionAdapter
 
-            deleteSectionAlertDialog = builder.show()
+                deleteSectionAlertDialog = builder.show()
+            }
         }
 
         val shareButton: Button = view.findViewById(R.id.shareButton)
@@ -295,61 +300,65 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
     private fun getNoteText(note: Note): SpannableStringBuilder {
         val noteText = SpannableStringBuilder()
-        when (note.type) {
-            NoteType.STANDARD -> {
-                for (section: NoteSection in note.sections) {
-                    noteText
-                        .bold { append(section.header) }
-                        .append("\n")
-                        .append(section.content)
-                        .append("\n\n")
-                }
-            }
-            NoteType.DUE_DATES -> {
-                val dates = arrayListOf<LocalDate>()
-                for (section: NoteSection in note.sections) {
-                    dates.add(section.getDueDatesLocalDate())
-                }
-                val sortedDates = dates.sorted()
-                for (date: LocalDate in sortedDates) {
+        if (note.sections.isEmpty()) {
+            noteText.italic { append(resources.getString(R.string.no_sections)) }
+        } else {
+            when (note.type) {
+                NoteType.STANDARD -> {
                     for (section: NoteSection in note.sections) {
-                        if (date == section.getDueDatesLocalDate()) {
-                            noteText
-                                .bold { append(date.dayOfMonth.toString()) }
-                                .append(" ")
-                                .bold { append(date.month.name) }
-                                .append(" ")
-                                .bold { append(date.year.toString()) }
-                                .append("\n")
-                                .append(section.content)
-                                .append("\n\n")
-                            break
+                        noteText
+                            .bold { append(section.header) }
+                            .append("\n")
+                            .append(section.content)
+                            .append("\n\n")
+                    }
+                }
+                NoteType.DUE_DATES -> {
+                    val dates = arrayListOf<LocalDate>()
+                    for (section: NoteSection in note.sections) {
+                        dates.add(section.getDueDatesLocalDate())
+                    }
+                    val sortedDates = dates.sorted()
+                    for (date: LocalDate in sortedDates) {
+                        for (section: NoteSection in note.sections) {
+                            if (date == section.getDueDatesLocalDate()) {
+                                noteText
+                                    .bold { append(date.dayOfMonth.toString()) }
+                                    .append(" ")
+                                    .bold { append(date.month.name) }
+                                    .append(" ")
+                                    .bold { append(date.year.toString()) }
+                                    .append("\n")
+                                    .append(section.content)
+                                    .append("\n\n")
+                                break
+                            }
                         }
                     }
                 }
-            }
-            NoteType.EVENTS -> {
-                val dateTimes = arrayListOf<LocalDateTime>()
-                for (section: NoteSection in note.sections) {
-                    dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
-                }
-                val sortedDateTimes = dateTimes.sorted()
-                for (dateTime: LocalDateTime in sortedDateTimes) {
+                NoteType.EVENTS -> {
+                    val dateTimes = arrayListOf<LocalDateTime>()
                     for (section: NoteSection in note.sections) {
-                        if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
-                            noteText
-                                .bold { append(dateTime.dayOfMonth.toString()) }
-                                .append(" ")
-                                .bold { append(dateTime.month.name) }
-                                .append(" ")
-                                .bold { append(dateTime.year.toString()) }
-                                .bold { append(" (") }
-                                .bold { append(getTimeText(section.eventTime.time)) }
-                                .bold { append(")") }
-                                .append("\n")
-                                .append(section.content)
-                                .append("\n\n")
-                            break
+                        dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
+                    }
+                    val sortedDateTimes = dateTimes.sorted()
+                    for (dateTime: LocalDateTime in sortedDateTimes) {
+                        for (section: NoteSection in note.sections) {
+                            if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
+                                noteText
+                                    .bold { append(dateTime.dayOfMonth.toString()) }
+                                    .append(" ")
+                                    .bold { append(dateTime.month.name) }
+                                    .append(" ")
+                                    .bold { append(dateTime.year.toString()) }
+                                    .bold { append(" (") }
+                                    .bold { append(getTimeText(section.eventTime.time)) }
+                                    .bold { append(")") }
+                                    .append("\n")
+                                    .append(section.content)
+                                    .append("\n\n")
+                                break
+                            }
                         }
                     }
                 }

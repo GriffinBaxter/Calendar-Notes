@@ -54,4 +54,6 @@
     <string name="sorry_section_content_empty">Sorry, a note\'s section content cannot be empty. Please try again.</string>
     <string name="your_notes">Your Notes</string>
     <string name="view_your_notes">View Your Notes</string>
+    <string name="no_sections_in_note">Sorry, there are no sections in this note to delete.</string>
+    <string name="no_sections">No sections</string>
 </resources>
