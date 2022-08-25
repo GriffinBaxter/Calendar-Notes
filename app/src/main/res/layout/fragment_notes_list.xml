@@ -8,30 +8,13 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/newNoteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
-
-        <Button
-            android:id="@+id/newNoteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_gravity="bottom"
-            android:text="@string/create_note"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/calendarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:text="@string/calendar"
-            tools:ignore="ButtonStyle" />
-
-    </LinearLayout>
+        android:layout_marginHorizontal="10dp"
+        android:layout_gravity="center"
+        android:text="@string/create_note" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/deleteModeSwitch"

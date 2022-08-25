@@ -53,4 +53,5 @@
     <string name="sorry_section_header_empty">Sorry, a note\'s section header cannot be empty. Please try again.</string>
     <string name="sorry_section_content_empty">Sorry, a note\'s section content cannot be empty. Please try again.</string>
     <string name="your_notes">Your Notes</string>
+    <string name="view_your_notes">View Your Notes</string>
 </resources>
