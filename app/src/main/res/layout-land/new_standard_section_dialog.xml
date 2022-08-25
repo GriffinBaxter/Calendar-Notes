@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/header"
+        android:textSize="24sp"
+        android:labelFor="@+id/headerBox" />
+
+    <EditText
+        android:id="@+id/headerBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/content"
+        android:textSize="24sp"
+        android:labelFor="@+id/contentBox" />
+
+    <EditText
+        android:id="@+id/contentBox"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:ems="10"
+        android:gravity="top|start"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine" />
+</LinearLayout>
