@@ -191,7 +191,9 @@ class CalendarFragment : Fragment() {
                 }
                 setCountryListener()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), resources.getString(R.string.error_country_search), Toast.LENGTH_LONG).show()
+                try {
+                    Toast.makeText(requireContext(), resources.getString(R.string.error_country_search), Toast.LENGTH_LONG).show()
+                } finally {}
             }
         }
     }
@@ -228,7 +230,9 @@ class CalendarFragment : Fragment() {
                 publicHolidaysLoaded = true
                 updateText()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), resources.getString(R.string.error_holiday_search), Toast.LENGTH_LONG).show()
+                try {
+                    Toast.makeText(requireContext(), resources.getString(R.string.error_holiday_search), Toast.LENGTH_LONG).show()
+                } finally {}
             }
         }
     }

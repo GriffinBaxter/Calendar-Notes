@@ -37,6 +37,8 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
     private lateinit var noteSections: TextView
 
+    private lateinit var sectionsInOrder: List<NoteSection>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,13 +57,14 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
             newSection(note)
         }
 
-        val sectionAdapter = SectionsAdapter(note.sections,this)
-
         val deleteSectionButton: Button = view.findViewById(R.id.deleteSectionButton)
         deleteSectionButton.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
             builder.setView(form)
+
+            sectionsInOrder = getSectionsOrder(note.type, note.sections)
+            val sectionAdapter = SectionsAdapter(sectionsInOrder,this)
 
             val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
             recyclerView.adapter = sectionAdapter
@@ -87,7 +90,7 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
     }
 
     override fun onSectionClick(position: Int) {
-        val section = note.sections[position]
+        val section = sectionsInOrder[position]
         viewModel.deleteNoteSection(note, section)
         Toast.makeText(requireContext(), resources.getString(R.string.success_delete_section), Toast.LENGTH_SHORT).show()
         writeData(requireActivity(), viewModel.notes.value!!)
@@ -353,5 +356,46 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
             }
         }
         return noteText
+    }
+
+    private fun getSectionsOrder(type: NoteType, sections: List<NoteSection>): List<NoteSection> {
+        val sectionsInOrder = arrayListOf<NoteSection>()
+        when (type) {
+            NoteType.STANDARD -> {
+                return sections
+            }
+            NoteType.DUE_DATES -> {
+                val dates = arrayListOf<LocalDate>()
+                for (section: NoteSection in note.sections) {
+                    dates.add(section.getDueDatesLocalDate())
+                }
+                val sortedDates = dates.sorted()
+                for (date: LocalDate in sortedDates) {
+                    for (section: NoteSection in note.sections) {
+                        if (date == section.getDueDatesLocalDate()) {
+                            sectionsInOrder.add(section)
+                            break
+                        }
+                    }
+                }
+                return sectionsInOrder
+            }
+            NoteType.EVENTS -> {
+                val dateTimes = arrayListOf<LocalDateTime>()
+                for (section: NoteSection in note.sections) {
+                    dateTimes.add(section.eventTime!!.getEventsLocalDateStartTime())
+                }
+                val sortedDateTimes = dateTimes.sorted()
+                for (dateTime: LocalDateTime in sortedDateTimes) {
+                    for (section: NoteSection in note.sections) {
+                        if (dateTime == section.eventTime!!.getEventsLocalDateStartTime()) {
+                            sectionsInOrder.add(section)
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        return sectionsInOrder
     }
 }
