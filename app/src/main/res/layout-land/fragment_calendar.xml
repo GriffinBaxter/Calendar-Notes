@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintHeight_max="wrap"
-        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintHeight_percent="0.3"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/calendarFilters"
         app:layout_constraintEnd_toEndOf="parent"
