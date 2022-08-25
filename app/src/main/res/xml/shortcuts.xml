@@ -3,7 +3,7 @@
     <shortcut
         android:shortcutId="calendar"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_baseline_calendar_today_48"
         android:shortcutShortLabel="@string/calendar_shortcut">
         <intent
             android:action="nz.ac.uclive.grb96.assignment1.shortcuts.calendar"
@@ -13,7 +13,7 @@
     <shortcut
         android:shortcutId="notes"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_baseline_notes_48"
         android:shortcutShortLabel="@string/notes_shortcut">
         <intent
             android:action="nz.ac.uclive.grb96.assignment1.shortcuts.notes"
