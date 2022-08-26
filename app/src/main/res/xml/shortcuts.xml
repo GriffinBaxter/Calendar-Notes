@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_baseline_calendar_today_48"
         android:shortcutShortLabel="@string/calendar_shortcut">
         <intent
-            android:action="nz.ac.uclive.grb96.assignment1.shortcuts.calendar"
-            android:targetPackage="nz.ac.uclive.grb96.assignment1"
-            android:targetClass="nz.ac.uclive.grb96.assignment1.MainActivity" />
+            android:action="nz.ac.uclive.grb96.calendarnotes.shortcuts.calendar"
+            android:targetPackage="nz.ac.uclive.grb96.calendarnotes"
+            android:targetClass="nz.ac.uclive.grb96.calendarnotes.MainActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="notes"
@@ -16,8 +16,8 @@
         android:icon="@drawable/ic_baseline_notes_48"
         android:shortcutShortLabel="@string/notes_shortcut">
         <intent
-            android:action="nz.ac.uclive.grb96.assignment1.shortcuts.notes"
-            android:targetPackage="nz.ac.uclive.grb96.assignment1"
-            android:targetClass="nz.ac.uclive.grb96.assignment1.MainActivity" />
+            android:action="nz.ac.uclive.grb96.calendarnotes.shortcuts.notes"
+            android:targetPackage="nz.ac.uclive.grb96.calendarnotes"
+            android:targetClass="nz.ac.uclive.grb96.calendarnotes.MainActivity" />
     </shortcut>
 </shortcuts>

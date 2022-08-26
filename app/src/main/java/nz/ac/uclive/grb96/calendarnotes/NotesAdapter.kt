@@ -1,11 +1,12 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.calendarnotes
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import nz.ac.uclive.grb96.assignment1.model.note.Note
+import nz.ac.uclive.grb96.calendarnotes.R
+import nz.ac.uclive.grb96.calendarnotes.model.note.Note
 
 class NotesAdapter(private var notes: List<Note>, private val onNoteListener: OnNoteListener) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 

@@ -7,7 +7,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "nz.ac.uclive.grb96.assignment1"
+        applicationId "nz.ac.uclive.grb96.calendarnotes"
         minSdk 31
         targetSdk 32
         versionCode 1

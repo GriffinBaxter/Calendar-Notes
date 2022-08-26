@@ -1,6 +1,6 @@
-package nz.ac.uclive.grb96.assignment1.util
+package nz.ac.uclive.grb96.calendarnotes.util
 
-import nz.ac.uclive.grb96.assignment1.model.datetime.StartEndTime
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.StartEndTime
 
 fun getTimeText(startEndTime: StartEndTime): String {
     return startEndTime.getEventsLocalStartTime().toString() + " - " + startEndTime.getEventsLocalEndTime().toString()

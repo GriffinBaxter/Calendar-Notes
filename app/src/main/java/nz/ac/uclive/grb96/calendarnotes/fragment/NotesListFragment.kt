@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.fragment
+package nz.ac.uclive.grb96.calendarnotes.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,12 +12,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
-import nz.ac.uclive.grb96.assignment1.*
-import nz.ac.uclive.grb96.assignment1.model.note.Note
-import nz.ac.uclive.grb96.assignment1.model.note.NoteType
-import nz.ac.uclive.grb96.assignment1.util.readData
-import nz.ac.uclive.grb96.assignment1.util.removeWhitespaceAndTrim
-import nz.ac.uclive.grb96.assignment1.util.writeData
+import nz.ac.uclive.grb96.calendarnotes.*
+import nz.ac.uclive.grb96.calendarnotes.model.note.Note
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteType
+import nz.ac.uclive.grb96.calendarnotes.util.readData
+import nz.ac.uclive.grb96.calendarnotes.util.removeWhitespaceAndTrim
+import nz.ac.uclive.grb96.calendarnotes.util.writeData
+import nz.ac.uclive.grb96.calendarnotes.NotesAdapter
+import nz.ac.uclive.grb96.calendarnotes.NotesViewModel
 
 class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
 

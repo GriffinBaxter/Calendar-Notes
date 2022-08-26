@@ -1,13 +1,13 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.calendarnotes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
-import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
-import nz.ac.uclive.grb96.assignment1.model.note.Note
-import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
-import nz.ac.uclive.grb96.assignment1.model.note.NoteType
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.DateStartEndTime
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.YearMonthDay
+import nz.ac.uclive.grb96.calendarnotes.model.note.Note
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteSection
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteType
 import java.time.LocalDate
 
 class NotesViewModel: ViewModel() {

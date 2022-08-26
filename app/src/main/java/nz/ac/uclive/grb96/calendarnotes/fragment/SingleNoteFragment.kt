@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.fragment
+package nz.ac.uclive.grb96.calendarnotes.fragment
 
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -15,17 +15,19 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import nz.ac.uclive.grb96.assignment1.*
-import nz.ac.uclive.grb96.assignment1.model.datetime.DateStartEndTime
-import nz.ac.uclive.grb96.assignment1.model.datetime.StartEndTime
-import nz.ac.uclive.grb96.assignment1.model.datetime.YearMonthDay
-import nz.ac.uclive.grb96.assignment1.model.note.Note
-import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
-import nz.ac.uclive.grb96.assignment1.model.note.NoteType
-import nz.ac.uclive.grb96.assignment1.util.getTimeText
-import nz.ac.uclive.grb96.assignment1.util.readData
-import nz.ac.uclive.grb96.assignment1.util.removeWhitespaceAndTrim
-import nz.ac.uclive.grb96.assignment1.util.writeData
+import nz.ac.uclive.grb96.calendarnotes.*
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.DateStartEndTime
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.StartEndTime
+import nz.ac.uclive.grb96.calendarnotes.model.datetime.YearMonthDay
+import nz.ac.uclive.grb96.calendarnotes.model.note.Note
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteSection
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteType
+import nz.ac.uclive.grb96.calendarnotes.util.getTimeText
+import nz.ac.uclive.grb96.calendarnotes.util.readData
+import nz.ac.uclive.grb96.calendarnotes.util.removeWhitespaceAndTrim
+import nz.ac.uclive.grb96.calendarnotes.util.writeData
+import nz.ac.uclive.grb96.calendarnotes.NotesViewModel
+import nz.ac.uclive.grb96.calendarnotes.SectionsAdapter
 import java.time.LocalDate
 import java.time.LocalDateTime
 

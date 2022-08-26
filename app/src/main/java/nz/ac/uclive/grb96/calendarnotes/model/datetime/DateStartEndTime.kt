@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.model.datetime
+package nz.ac.uclive.grb96.calendarnotes.model.datetime
 
 import java.time.LocalDateTime
 

@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.fragment
+package nz.ac.uclive.grb96.calendarnotes.fragment
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -14,10 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import nz.ac.uclive.grb96.assignment1.NotesViewModel
-import nz.ac.uclive.grb96.assignment1.R
-import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
-import nz.ac.uclive.grb96.assignment1.util.getTimeText
+import nz.ac.uclive.grb96.calendarnotes.NotesViewModel
+import nz.ac.uclive.grb96.calendarnotes.R
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteSection
+import nz.ac.uclive.grb96.calendarnotes.util.getTimeText
 import org.json.JSONArray
 import java.io.BufferedInputStream
 import java.net.URL

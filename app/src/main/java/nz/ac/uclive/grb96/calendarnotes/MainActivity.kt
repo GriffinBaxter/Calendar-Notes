@@ -1,9 +1,9 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.calendarnotes
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
-
+import nz.ac.uclive.grb96.calendarnotes.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

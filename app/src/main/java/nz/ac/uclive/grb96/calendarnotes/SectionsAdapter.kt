@@ -1,11 +1,12 @@
-package nz.ac.uclive.grb96.assignment1
+package nz.ac.uclive.grb96.calendarnotes
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import nz.ac.uclive.grb96.assignment1.model.note.NoteSection
+import nz.ac.uclive.grb96.calendarnotes.R
+import nz.ac.uclive.grb96.calendarnotes.model.note.NoteSection
 
 class SectionsAdapter(private var sections: List<NoteSection>, private val onSectionListener: OnSectionListener) : RecyclerView.Adapter<SectionsAdapter.SectionViewHolder>() {
 

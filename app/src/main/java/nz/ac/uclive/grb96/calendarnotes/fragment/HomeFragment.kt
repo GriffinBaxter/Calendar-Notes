@@ -1,4 +1,4 @@
-package nz.ac.uclive.grb96.assignment1.fragment
+package nz.ac.uclive.grb96.calendarnotes.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.Navigation
-import nz.ac.uclive.grb96.assignment1.R
+import nz.ac.uclive.grb96.calendarnotes.R
 
 class HomeFragment : Fragment() {
 
