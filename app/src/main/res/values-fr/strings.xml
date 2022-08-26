@@ -58,4 +58,6 @@
     <string name="no_sections">Aucune rubrique</string>
     <string name="calendar_shortcut">Calendrier</string>
     <string name="notes_shortcut">Remarques</string>
+    <string name="view_note">Noter: %1$s</string>
+    <string name="no_longer_exists">La notice n\'existe plus.</string>
 </resources>

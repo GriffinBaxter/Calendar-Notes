@@ -1,5 +1,7 @@
 package nz.ac.uclive.grb96.calendarnotes.fragment
 
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -64,6 +69,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
         val note = viewModel.notes.value!![position]
         if (deleteMode) {
             viewModel.deleteNote(note)
+            removeShortcut(note.name)
             Toast.makeText(requireContext(), resources.getString(R.string.success_delete_note), Toast.LENGTH_SHORT).show()
             writeData(requireActivity(), viewModel.notes.value!!)
         } else {
@@ -111,6 +117,7 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
                         Toast.makeText(requireContext(), resources.getString(R.string.sorry_note_name_empty), Toast.LENGTH_LONG).show()
                     } else if (viewModel.getNoteFromName(name) == null) {
                         viewModel.addNote(Note(name, noteType, arrayListOf()))
+                        pushShortcut(name)
                         writeData(requireActivity(), viewModel.notes.value!!)
                         dismiss()
                     } else {
@@ -120,4 +127,21 @@ class NotesListFragment : Fragment(), NotesAdapter.OnNoteListener {
             }
         }.show()
     }
+
+    private fun pushShortcut(name: String) {
+        val intent = Intent()
+        intent.action = "${requireContext().packageName}.shortcuts.note.$name"
+        intent.component = ComponentName(requireContext().packageName, "${requireContext().packageName}.MainActivity")
+        val shortcut = ShortcutInfoCompat.Builder(requireContext(), "note:$name")
+            .setShortLabel(resources.getString(R.string.view_note, name))
+            .setIcon(IconCompat.createWithResource(requireContext(), R.drawable.ic_baseline_note_48))
+            .setIntent(intent)
+            .build()
+        ShortcutManagerCompat.pushDynamicShortcut(requireContext(), shortcut)
+    }
+
+    private fun removeShortcut(name: String) {
+        ShortcutManagerCompat.removeDynamicShortcuts(requireContext(), listOf("note:$name"))
+    }
+
 }

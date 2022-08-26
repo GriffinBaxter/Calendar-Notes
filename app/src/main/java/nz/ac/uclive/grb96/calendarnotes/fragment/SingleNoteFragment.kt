@@ -50,49 +50,54 @@ class SingleNoteFragment : Fragment(), SectionsAdapter.OnSectionListener {
 
         val view = inflater.inflate(R.layout.fragment_single_note, container, false)
         val name = arguments?.getString("name")!!
-        note = viewModel.getNoteFromName(name)!!
 
-        val noteName = view.findViewById<TextView>(R.id.note_name)
-        noteName.text = note.name
+        val findNote = viewModel.getNoteFromName(name)
+        if (findNote == null) {
+            Toast.makeText(requireContext(), resources.getString(R.string.no_longer_exists), Toast.LENGTH_LONG).show()
+        } else {
+            note = findNote
 
-        val newSectionButton: Button = view.findViewById(R.id.newSectionButton)
-        newSectionButton.setOnClickListener {
-            newSection(note)
-        }
+            val noteName = view.findViewById<TextView>(R.id.note_name)
+            noteName.text = note.name
 
-        val deleteSectionButton: Button = view.findViewById(R.id.deleteSectionButton)
-        deleteSectionButton.setOnClickListener {
-            if (note.sections.isEmpty()) {
-                Toast.makeText(requireContext(), resources.getString(R.string.no_sections_in_note), Toast.LENGTH_LONG).show()
-            } else {
+            val newSectionButton: Button = view.findViewById(R.id.newSectionButton)
+            newSectionButton.setOnClickListener {
+                newSection(note)
+            }
+
+            val deleteSectionButton: Button = view.findViewById(R.id.deleteSectionButton)
+            deleteSectionButton.setOnClickListener {
+                if (note.sections.isEmpty()) {
+                    Toast.makeText(requireContext(), resources.getString(R.string.no_sections_in_note), Toast.LENGTH_LONG).show()
+                } else {
+                    val builder = AlertDialog.Builder(requireContext())
+                    val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
+                    builder.setView(form)
+
+                    sectionsInOrder = getSectionsOrder(note.type, note.sections)
+                    val sectionAdapter = SectionsAdapter(sectionsInOrder,this)
+
+                    val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
+                    recyclerView.adapter = sectionAdapter
+
+                    deleteSectionAlertDialog = builder.show()
+                }
+            }
+
+            val shareButton: Button = view.findViewById(R.id.shareButton)
+            shareButton.setOnClickListener {
+                val options = arrayOf(resources.getString(R.string.email), resources.getString(R.string.text))
                 val builder = AlertDialog.Builder(requireContext())
-                val form = layoutInflater.inflate(R.layout.delete_sections_list, null, false)
-                builder.setView(form)
-
-                sectionsInOrder = getSectionsOrder(note.type, note.sections)
-                val sectionAdapter = SectionsAdapter(sectionsInOrder,this)
-
-                val recyclerView: RecyclerView = form.findViewById(R.id.sections_recycler_view)
-                recyclerView.adapter = sectionAdapter
-
-                deleteSectionAlertDialog = builder.show()
+                builder.setTitle(resources.getString(R.string.how_sharing_note))
+                builder.setItems(options) { _, optionId ->
+                    dispatchAction(optionId, note)
+                }
+                builder.show()
             }
+
+            noteSections = view.findViewById(R.id.note_sections)
+            updateNoteSections(note)
         }
-
-        val shareButton: Button = view.findViewById(R.id.shareButton)
-        shareButton.setOnClickListener {
-            val options = arrayOf(resources.getString(R.string.email), resources.getString(R.string.text))
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(resources.getString(R.string.how_sharing_note))
-            builder.setItems(options) { _, optionId ->
-                dispatchAction(optionId, note)
-            }
-            builder.show()
-        }
-
-        noteSections = view.findViewById(R.id.note_sections)
-        updateNoteSections(note)
-
         return view
     }
 

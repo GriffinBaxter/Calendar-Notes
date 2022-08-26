@@ -193,7 +193,7 @@ class CalendarFragment : Fragment() {
             } catch (e: Exception) {
                 try {
                     Toast.makeText(requireContext(), resources.getString(R.string.error_country_search), Toast.LENGTH_LONG).show()
-                } finally {}
+                } catch (e: Exception) {}
             }
         }
     }
@@ -232,7 +232,7 @@ class CalendarFragment : Fragment() {
             } catch (e: Exception) {
                 try {
                     Toast.makeText(requireContext(), resources.getString(R.string.error_holiday_search), Toast.LENGTH_LONG).show()
-                } finally {}
+                } catch (e: Exception) {}
             }
         }
     }

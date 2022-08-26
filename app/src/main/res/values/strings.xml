@@ -58,4 +58,6 @@
     <string name="no_sections">No sections</string>
     <string name="calendar_shortcut">Calendar</string>
     <string name="notes_shortcut">Notes</string>
+    <string name="view_note">Note: %1$s</string>
+    <string name="no_longer_exists">Note no longer exists.</string>
 </resources>
